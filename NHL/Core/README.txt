@@ -1,0 +1,16 @@
+Start by changing the relevant fields near the top of GetPbP, PbPMethods2, and ChartMethods (including MAX_SEASON).
+
+Open up a text file in the same folder as GetPbP and write the following code.
+
+import GetPbP
+GetPbP.autoupdate(True)
+
+Save the file under any name, but change the extension to .py.
+
+Open up command line or terminal. Navigate (using the cd command) to this folder. Write
+
+python3 [name].py
+
+where [name] is the name of the file you just wrote and saved. 
+
+It will take a long time to run, but should give you all preseason, regular season, and playoff games from 2007 to the present.
