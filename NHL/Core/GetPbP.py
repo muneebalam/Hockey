@@ -610,17 +610,28 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
 
             events = read_events(data, xy, TEAM_MAP[homename], TEAM_MAP[roadname])
 
-            if player_short_to_long is not None and len(player_short_to_long) > 1:
+            if player_short_to_long is not None and len(player_short_to_long) > 1 \
+                    and (len(player_short_to_long[hshort]) > 0 or len(player_short_to_long[rshort]) > 0):
                 for i in range(len(events)):
                     try:
                         if not events[i][8] == 'n/a':
                             if not events[i][8][0] == '#':
                                 events[i][8] = '#' + events[i][8]
+                        if not events[i][9] == 'n/a':
+                            if not events[i][9][0] == '#':
+                                events[i][9] = '#' + events[i][9]
+                        if not (events[i][8] == 'n/a' and events[i][9] == 'n/a'):
+                            if not (events[i][6] == hshort and events[i][6] == rshort):
+                                if events[i][8].upper() in player_short_to_long[hshort] or events[i][9].upper() in player_short_to_long[rshort]:
+                                    events[i][6] = hshort
+                                elif events[i][8].upper() in player_short_to_long[rshort] or events[i][9].upper() in player_short_to_long[hshort]:
+                                    events[i][6] = rshort
+                                else:
+                                    print('Which team?', events[i])
+                        if not events[i][8] == 'n/a':
                             events[i][8] = player_short_to_long[events[i][6]][events[i][8].upper()]
 
                         if not events[i][9] == 'n/a':
-                            if not events[i][9][0] == '#':
-                                events[i][9] = '#' + events[i][8]
                             if events[i][6] == hshort:
                                 events[i][9] = player_short_to_long[rshort][events[i][9].upper()]
                             else:
@@ -633,7 +644,7 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
                         elif events[i][9] == '#':
                             events[i][9] = 'n/a'
                         else:
-                            print(events[i])
+                            print('Could not get full name', events[i])
 
             flipxy = [] #some JSON have home shooting left first, others home shooting right. Want the latter
             for i in range(len(events)):
@@ -1249,6 +1260,9 @@ def parse_toih(season, game, force_overwrite=False):
             namei = name.index(' ')
             name = name[:namei] + ' ' + fixname(name[namei + 1:])
             hdict[name_short.upper()] = name[2:].strip()
+            if len(name_short).split(' ') > 2:
+                name_short = ' '.join(name_short.split(' ')[:2])
+                hdict[name_short.upper()] = name[2:].strip()
             line = data2[i][data2[i].index('Start of Shift') + 1:]
             line = line[:line.index('Per')].split('>')
             shift_data_startend[name] = []
@@ -1327,6 +1341,9 @@ def parse_toiv(season, game, force_overwrite=False):
             namei = name.index(' ')
             name = name[:namei] + ' ' + fixname(name[namei + 1:])
             rdict[name_short.upper()] = name[2:].strip()
+            if len(name_short).split(' ') > 2:
+                name_short = ' '.join(name_short.split(' ')[:2])
+                rdict[name_short.upper()] = name[2:].strip()
             line = data2[i][data2[i].index('Start of Shift') + 1:]
             line = line[:line.index('Per')].split('>')
             shift_data_startend[name] = []
