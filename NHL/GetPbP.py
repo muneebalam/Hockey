@@ -1553,7 +1553,6 @@ def get_teamlist(season):
 def write(season, force_overwrite=False):
     """Writes season data"""
     gamepages(season, force_overwrite)
-    teampages(season, force_overwrite)
 
 
 def fixname(name):
