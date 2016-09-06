@@ -223,7 +223,7 @@ def get_assists(info):
     """Gets assisting players in info"""
     note = get_note(info)
     try:
-        return [GetPbP.formatname(name) for name in note[note.index('Assist')+8:].strip().split(';')]
+        return [x.strip() for x in note[note.index('Assist')+8:].strip().split(';')]
     except ValueError:
         return []
     except IndexError:
@@ -963,13 +963,13 @@ def convert_time(time, period=0, countdown=False):
 
 def get_gamebygame_data_filename(season):
     """Helper method for Tableau charts"""
-    return '{0:s}{1:d} gamebygame.csv'.format(GetPbP.get_parsed_gamesheet_folder(season), season)
+    return '{0:s}{1:d} gamebygame.csv'.format(GetPbP.get_additional_data_folder(), season)
 
-def gen_gamebygame(season):
-    """Helper method for Tableau charts"""
+def gen_gamebygame(season, reparse=False):
+    """Helper method for Tableau charts, game-by-game stats"""
     w = open(get_gamebygame_data_filename(season), 'w')
     w.write('Player,Team,Pos,Game,Season,Date,TOION(60s),CFON,CAON,TOIOFF(60s),CFOFF,CAOFF,GFON,GAON,GFOFF,GAOFF,')
-    w.write('FComp,DComp,FTeam,DTeam,F Faced,D Faced,F With,D With,DZS,NZS,OZS,iG,iCF')
+    w.write('FComp,DComp,FTeam,DTeam,F Faced,D Faced,F With,D With,DZS,NZS,OZS,iG,iCF,iA1,iA2')
     fqoc = {}
     dqoc = {}
     fqot = {}
@@ -982,6 +982,11 @@ def gen_gamebygame(season):
     fqot[season] = {}
     dqot[season] = {}
     for game in get_season_games(season):
+        if reparse:
+            try:
+                GetPbP.parse_game(season, game, True)
+            except Exception as e:
+                print('ISSUE WITH', season, game, e, e.args)
         fqoc[season][game] = {}
         fqot[season][game] = {}
         dqoc[season][game] = {}
@@ -1095,11 +1100,11 @@ def gen_gamebygame(season):
                 hometoi += 1
                 for p in hps:
                     if p not in gamedata['Home']:
-                        gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     gamedata['Home'][p][2] += 1
                 for p in rps:
                     if p not in gamedata['Road']:
-                        gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     gamedata['Road'][p][2] += 1
 
             for line in read_game_corsi(season, game):
@@ -1112,21 +1117,26 @@ def gen_gamebygame(season):
                     homecf += 1
                     if goal:
                         homegf += 1
+                        assists = get_assists(line)
+                        for i, a in enumerate(assists):
+                            if a not in gamedata['Home']:
+                                gamedata['Home'][a] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            gamedata['Home'][a][-2+i] += 1
                     for p in hps:
                         if p not in gamedata['Home']:
-                            gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                            #[cf, ca, toi, gf, ga, dz, nz, oz, ig, icf]
+                            gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            #[cf, ca, toi, gf, ga, dz, nz, oz, ig, icf, ia1, ia2]
                         gamedata['Home'][p][0] += 1
                         if goal:
                             gamedata['Home'][p][3] += 1
                     for p in rps:
                         if p not in gamedata['Road']:
-                            gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         gamedata['Road'][p][1] += 1
                         if goal:
                             gamedata['Road'][p][4] += 1
                     if shooter not in gamedata['Home']:
-                        gamedata['Home'][shooter] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        gamedata['Home'][shooter] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     gamedata['Home'][shooter][6] += 1
                     if goal:
                         gamedata['Home'][shooter][5] += 1
@@ -1134,20 +1144,25 @@ def gen_gamebygame(season):
                     homeca += 1
                     if goal:
                         homega += 1
+                        assists = get_assists(line)
+                        for i, a in enumerate(assists):
+                            if a not in gamedata['Road']:
+                                gamedata['Road'][a] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            gamedata['Road'][a][-2+i] += 1
                     for p in hps:
                         if p not in gamedata['Home']:
-                            gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         gamedata['Home'][p][1] += 1
                         if goal:
                             gamedata['Home'][p][4] += 1
                     for p in rps:
                         if p not in gamedata['Road']:
-                            gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         gamedata['Road'][p][0] += 1
                         if goal:
                             gamedata['Road'][p][3] += 1
                     if shooter not in gamedata['Road']:
-                        gamedata['Road'][shooter] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        gamedata['Road'][shooter] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     gamedata['Road'][shooter][6] += 1
                     if goal:
                         gamedata['Road'][shooter][5] += 1
@@ -1156,10 +1171,10 @@ def gen_gamebygame(season):
                 rps = get_road_players(line, ['F', 'D'])
                 for p in hps:
                     if p not in gamedata['Home']:
-                        gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 for p in rps:
                     if p not in gamedata['Road']:
-                        gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 ez = get_event_zone(line)
                 act = get_acting_team(line)
                 if ez == 'Def':
@@ -1201,11 +1216,14 @@ def gen_gamebygame(season):
                            str(homegf - gamedata['Home'][p][3]),
                            str(homega - gamedata['Home'][p][4]),
                            str(gamedata['Home'][p][5]), str(gamedata['Home'][p][6]), str(gamedata['Home'][p][7]),
-                           str(gamedata['Home'][p][8]), str(gamedata['Home'][p][9])]
+                           str(gamedata['Home'][p][8]), str(gamedata['Home'][p][9]),
+                           str(gamedata['Home'][p][10]), str(gamedata['Home'][p][11])]
                     w.write('\n{0:s}'.format(','.join(lst)))
                 except KeyError:
                     if not p[0] == '#':
                         print(season, game, hname, rname, hname+p)
+                except IndexError as ie:
+                    print(season, game, ie, ie.args, p, gamedata['Home'][p])
                     #print([key for key in posmap.keys() if key[:3] == hname])
                     #print([key for key in posmap.keys() if key[:3] == rname])
                     #raise KeyError
@@ -1220,7 +1238,8 @@ def gen_gamebygame(season):
                            str(homega - gamedata['Road'][p][3]),
                            str(homegf - gamedata['Road'][p][4]),
                            str(gamedata['Road'][p][5]), str(gamedata['Road'][p][6]), str(gamedata['Road'][p][7]),
-                           str(gamedata['Road'][p][8]), str(gamedata['Road'][p][9])]
+                           str(gamedata['Road'][p][8]), str(gamedata['Road'][p][9]),
+                           str(gamedata['Road'][p][10]), str(gamedata['Road'][p][11])]
                     w.write('\n{0:s}'.format(','.join(lst)))
                 except KeyError:
                     if not p[0] == '#':
@@ -1228,6 +1247,8 @@ def gen_gamebygame(season):
                     #print([key for key in posmap.keys() if key[:3] == hname])
                     #print([key for key in posmap.keys() if key[:3] == rname])
                     #raise KeyError
+                except IndexError as ie:
+                    print(season, game, ie, ie.args, p, gamedata['Road'][p])
         except IndexError as e:
             print(season, game, e, e.args)
     w.close()
@@ -1316,7 +1337,7 @@ def get_penalty_type(info):
         return info[9].lower()
 
 def get_number_dict(season, game):
-    """Matches player names and numbers"""
+    """Matches player names and numbers. NOT IN USE"""
     hdct = {}
     rdct = {}
     for line in read_game_corsi(season, game):
@@ -1340,7 +1361,7 @@ def get_number_dict(season, game):
     return hdct, rdct
 
 def match_name(p_org, num_name_dict):
-    """For matching e.g. #40 Zetterberg, 40 Zetterberg, or Zetterberg to Henrik Zetterberg"""
+    """For matching e.g. #40 Zetterberg, 40 Zetterberg, or Zetterberg to Henrik Zetterberg. NOT IN USE"""
     if p_org == '#team':
         return 'team'
     elif p_org == 'n/a':
