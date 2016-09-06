@@ -88,11 +88,15 @@ PENALTIES = {'Holding the stick': 'Holding the stick', 'Slashing': 'Slashing', '
              'PS-Tripping on breakaway': 'PS-Tripping on breakaway',
              'PS-Covering puck in crease': 'PS-Covering puck in crease',
              'PS - Slash on breakaway': 'PS-Slashing on breakaway',
-             'PS-Slash on breakaway': 'PS-Slasing on breakaway',
+             'PS - Tripping on breakaway': 'PS-Tripping on breakaway',
+             'PS - Hooking on breakaway': 'PS-Hooking on breakaway',
+             'PS - Holding on breakaway': 'PS-Holding on breakaway',
+             'PS-Slash on breakaway': 'PS-Slashing on breakaway',
              'PS - Covering puck in crease': 'PS-Covering puck in crease',
              'PS-Net displaced': 'PS-Net displaced',
              'PS - Throw object at puck': 'PS-Throw object at puck',
              'PS-Throw object at puck': 'PS-Throw object at puck',
+             'PS - Thow object at puck': 'PS-Throw object at puck',
              'PS - Picking up puck in crease': 'PS-Picking up puck in crease',
              'Delay Gm - Face-off Violation': 'Delay of game-faceoff violation',
              'Delaying the game': 'Delay of game',
@@ -111,6 +115,8 @@ PENALTIES = {'Holding the stick': 'Holding the stick', 'Slashing': 'Slashing', '
              'Aggressor': 'Instigator', 'Illegal substitution - bench': 'Illegal substitution-bench',
              'Cross check - double minor': 'Cross checking', 'Face-off violation': 'Delay of game-faceoff violation',
              'Leaving penalty box - bench': 'Leaving penalty box-bench', 'Head butting': 'Head butting'}
+for val in PENALTIES.copy().values():
+    PENALTIES[val] = val
 NAMES = {'n/a': 'n/a', 'ALEXANDER OVECHKIN': 'Alex Ovechkin', 'TOBY ENSTROM': 'Tobias Enstrom',
          'JAMIE MCGINN': 'Jamie McGinn', 'CODY MCLEOD': 'Cody McLeod', 'MARC-EDOUARD VLASIC': 'Marc-Edouard Vlasic',
          'RYAN MCDONAGH': 'Ryan McDonagh', 'CHRIS TANEV': 'Christopher Tanev', 'JARED MCCANN': 'Jared McCann',
@@ -504,7 +510,10 @@ def get_season_saved_gamelist(season, seg=['regular', 'playoff'], team1=None, te
                                 print('Could not get home/road for {0:d} {1:d}'.format(season, gamenum))
                                 print(line)
                         except FileNotFoundError:
-                            print('Parsed PBP file not found for', season, gamenum)
+                            if gamenum < 20001:
+                                pass
+                            else:
+                                print('Parsed PBP file not found for', season, gamenum)
             except ValueError:
                 pass
 
@@ -515,6 +524,22 @@ def get_season_saved_gamelist(season, seg=['regular', 'playoff'], team1=None, te
     gameset = list(gameset)
     gameset.sort()
     return gameset
+
+
+def reparse_season(season):
+    """Re-parses all games from a given season"""
+
+    gameset = set()
+    w = open('/Users/muneebalam/Desktop/errors.txt', 'w')
+    for gamenum in get_season_saved_gamelist(season, seg='all'):
+        if gamenum not in gameset:
+            gameset.add(gamenum)
+            try:
+                parse_game(season, gamenum, True)
+            except Exception as e:
+                w.write('\n{0:d}\t{1:d}\t{2:s}'.format(season, gamenum, str(e)))
+    teampages(season)
+    w.close()
 
 
 def save_file(url, savefile):
@@ -621,13 +646,18 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
                             if not events[i][9][0] == '#':
                                 events[i][9] = '#' + events[i][9]
                         if not (events[i][8] == 'n/a' and events[i][9] == 'n/a'):
-                            if not (events[i][6] == hshort and events[i][6] == rshort):
+                            if not (events[i][6] == hshort or events[i][6] == rshort):
                                 if events[i][8].upper() in player_short_to_long[hshort] or events[i][9].upper() in player_short_to_long[rshort]:
                                     events[i][6] = hshort
                                 elif events[i][8].upper() in player_short_to_long[rshort] or events[i][9].upper() in player_short_to_long[hshort]:
                                     events[i][6] = rshort
                                 else:
-                                    print('Which team?', events[i])
+                                    if len(player_short_to_long[rshort]) + len(player_short_to_long[hshort]) < 40:
+                                        pass
+                                    elif events[i][8] == '#Team' or events[i][9] == '#Team':
+                                        pass
+                                    else:
+                                        print(season, game, 'Which team?', events[i])
                         if not events[i][8] == 'n/a':
                             events[i][8] = player_short_to_long[events[i][6]][events[i][8].upper()]
 
@@ -644,7 +674,29 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
                         elif events[i][9] == '#':
                             events[i][9] = 'n/a'
                         else:
-                            print('Could not get full name', events[i])
+                            if len(player_short_to_long[rshort]) + len(player_short_to_long[hshort]) < 38:
+                                pass
+                            elif events[i][8] == '#Team' or events[i][9] == '#Team':
+                                pass
+                            elif len(player_short_to_long[rshort]) >= 19:
+                                pass #TODO
+                            elif len(player_short_to_long[hshort]) >= 19:
+                                pass #TODO
+                            else:
+                                print(season, game, 'Which team?', events[i])
+
+                    if events[i][5] == 'GOAL': #to format assist names
+                        note = events[i][10]
+                        note = note.upper()
+                        if 'ASSIST' in note:
+                            note = note[note.index('ASSIST')+1:]
+                            note = note[note.index(':')+1:].strip()
+                            assists = [x.strip() for x in note.split(';')]
+                            assists_fix = [player_short_to_long[events[i][6]][p] for p in assists]
+                            for p, pfix in zip(assists, assists_fix):
+                                events[i][10] = events[i][10].replace(p, pfix)
+                        #print(events[i])
+
 
             flipxy = [] #some JSON have home shooting left first, others home shooting right. Want the latter
             for i in range(len(events)):
@@ -743,7 +795,10 @@ def read_event_locations(season, game, hname, rname):
                 xy = '(n/a;n/a)'
             event_dct['{0:s} {1:d}'.format(evtype, evtime)] = xy
     except FileNotFoundError:
-        print('No JSON for', season, game)
+        if game < 20001 or game > 30417:
+            pass
+        else:
+            print('No JSON for', season, game)
 
     try:
         r = open(get_espn_filename(season, game), 'r')
@@ -772,7 +827,8 @@ def read_event_locations(season, game, hname, rname):
                 y = int(line[1])
                 event_dct['{0:s} {1:d}'.format(evtype, evtime)] = '({0:d};{1:d})'.format(x, y)
     except FileNotFoundError:
-        print('No ESPN for', season, game)
+        #print('No ESPN for', season, game)
+        pass
 
     return event_dct
 
@@ -827,6 +883,13 @@ def read_events(gamedata, xy, hname, rname):
             else:
                 time = rel_data[2]
             time = time[:time.index(' ')]
+            try:
+                timeconvert = convert_time(time, period)
+            except ValueError: #sometimes time listed as 21:0-1 in shootouts
+                if period == 5:
+                    time = '0:00'
+                else:
+                    print(season, game, 'error with time', rel_data)
             team, zone, actor, recip, note = get_team_zone_player_recipient_note(gamedata[event_is[i]:event_is[i] + 2], hname, rname)
             if team == rname or evtype == 'BLOCK' and not team == hname:
                 if zone == 'Off':
@@ -903,7 +966,7 @@ def read_events(gamedata, xy, hname, rname):
         for p in rplayers:
             pos, fn, ln = p.split(' ', 2)
             rplayermap[ln.lower()] = fn + ' ' + ln
-        if evtype == 'GOAL':
+        if evtype == 'GOAL' and not (period == 5 and time == '0:00'):
             if team == hname:
                 hscore += 1
             elif team == rname:
@@ -941,7 +1004,7 @@ def get_team_zone_player_recipient_note(evdata, hname, rname):
         try:
             zone = strings[0].split(' ')[2]
         except IndexError:
-            print('fixing zone for', strings)
+            #print('fixing zone for', strings)
             zone = strings[0].split(' ')[0]
             team = 'n/a'
         hi = strings[1].index(hname)
@@ -958,8 +1021,12 @@ def get_team_zone_player_recipient_note(evdata, hname, rname):
             pass
         strings = evdata[1].split(' ')
         team = strings[0]
-        actor = ' '.join(strings[1:3])
-        recip = ' '.join(strings[5:7])
+        evi = strings.index('HIT')
+        actor = ' '.join(strings[1:evi])
+        try:
+            recip = ' '.join(strings[evi+2:strings.index(zone)])
+        except ValueError:
+            recip = ' '.join(strings[evi+2:])
     elif evdata[0] == 'BLOCK':
         strings = evdata[1].split(' BLOCKED BY ')
         if strings[0] == '':
@@ -988,6 +1055,12 @@ def get_team_zone_player_recipient_note(evdata, hname, rname):
         evdata[1] = evdata[1].replace('Tip-In', 'Tip').replace('Tip in', 'Tip')
         strings = evdata[1].split('-', 1)[1].strip().split(' ')
         zi = search_list(strings, ZONES, 0)
+        if zi == 0: #sometimes in shootouts zone not listed
+            for shottype in {'Wrist', 'Backhand', 'Snap', 'Slap'}:
+                if shottype in strings:
+                    wi = strings.index(shottype)
+                    zi = wi + 1
+                    strings = strings[:wi + 1] + ['Off.', 'Zone'] + strings[wi + 1:] #assume OZ
         if strings[zi - 1].isupper():
             actor = ' '.join(strings[:zi])
             note = ' '.join(strings[-2:])
@@ -995,12 +1068,21 @@ def get_team_zone_player_recipient_note(evdata, hname, rname):
             actor = ' '.join(strings[:zi - 1])
             note = strings[zi - 1] + ' ' + ' '.join(strings[-2:])
         zone = strings[zi]
+        if actor[-12:] == 'Penalty Shot': #24 KAPANENPenalty Shot
+            note = actor[-12:].strip() + ' ' + note.strip()
+            actor = actor[:-12].strip()
     elif evdata[0] == 'MISS':
         evdata[1] = evdata[1].replace('Tip-In', 'Tip').replace('Tip in', 'Tip')
         strings = evdata[1].split(' ')
         actor = ' '.join(strings[1:3])
         team = strings[0]
         zi = search_list(strings, ZONES, 0)
+        if zi == 0: #sometimes in shootouts zone not listed
+            for shottype in {'Wrist', 'Backhand', 'Snap', 'Slap'}:
+                if shottype in strings:
+                    wi = strings.index(shottype)
+                    zi = wi + 1
+                    strings = strings[:wi + 1] + ['Off.', 'Zone'] + strings[wi + 1:] #assume OZ
         zone = strings[zi]
         note = ' '.join(strings[3:zi]) + ' ' + ' '.join(strings[-2:])
         if strings[3] not in {'Snap', 'Backhand', 'Slap', 'Wrist', 'Tip', 'Tip-In', 'Wrap', 'Deflected', 'Wrap-around'}:
@@ -1025,15 +1107,25 @@ def get_team_zone_player_recipient_note(evdata, hname, rname):
                         actor = ' '.join(strings[1:5])
                         note = ' '.join(strings[5:zi]) + ' ' + ' '.join(strings[-2:])
                     else:
-                        print(evdata[1])
+                        print('having trouble with missed shot', evdata[1])
     elif evdata[0] == 'GOAL':
         team = evdata[1][:3]
         strings = evdata[1].split(' ')
         zi = search_list(strings, ZONES, 0)
+        if zi == 0: #sometimes in shootouts zone not listed
+            for shottype in {'Wrist', 'Backhand', 'Snap', 'Slap'}:
+                if shottype in strings:
+                    wi = strings.index(shottype)
+                    zi = wi + 1
+                    strings = strings[:wi + 1] + ['Off.', 'Zone'] + strings[wi + 1:] #assume OZ
         zone = strings[zi]
         note = strings[zi - 1] + ' ' + ' '.join(strings[zi + 2:])
         try:
-            actor = evdata[1][3:evdata[1].index('(')].strip()
+            pareni = evdata[1].index('(')
+            if pareni > evdata[1].index(zone):
+                raise ValueError
+            else:
+                actor = evdata[1][3:pareni].strip()
         except ValueError:
             actor = ' '.join(strings[1:zi - 1])
         while '(' in note:
@@ -1075,7 +1167,8 @@ def get_team_zone_player_recipient_note(evdata, hname, rname):
             zone = strings[zi]
         pi = 0
         for i in range(zi):
-            if strings[i].isupper() or len(strings[i]) > 0 and strings[i][0] == '#':
+            if (strings[i].isupper() and not strings[i] == 'PS') or \
+                    (len(strings[i]) > 0 and strings[i][0] == '#'):
                 pi = i + 1
             else:
                 break
@@ -1102,8 +1195,15 @@ def get_team_zone_player_recipient_note(evdata, hname, rname):
                 note = fix_penalty(p) + note[len(p):]
                 break
         if not found:
-            print(team, zone, actor, recip, note)
-            print(evdata[1])
+            note2 = note[note.index(' ') + 1:]
+            for p in PENALTIES:
+                if len(note2) >= len(p) and p == note2[:len(p)]:
+                    found = True
+                    note = fix_penalty(p) + note2[len(p):]
+                    break
+            if not found:
+                print('Could not find penalty in', team, zone, actor, recip, note)
+                print('For penalty see', evdata[1])
         if team == 'Tea' or team == 'TEA':
             print('fixing', team, zone, actor, recip, note)
             team = 'n/a'
@@ -1201,8 +1301,8 @@ def get_start_end_times(gamedata):
             if len(lst) == 2:
                 return lst
             else:
-                print(str(lst))
-                print(str(gamedata[i]))
+                print('cannot get start end times', str(lst))
+                print('see', str(gamedata[i]))
                 return [lst[0], 'n/a']
     return ['n/a', 'n/a']
 
@@ -1216,7 +1316,7 @@ def get_attendance_venue(gamedata):
             if len(lst) == 3:
                 return [lst[0], lst[1] + 'at' + lst[2]]
             elif len(lst) == 1:
-                print(str(lst))
+                print('cannot get attendance venue', str(lst))
                 return [lst[0], 'n/a']
             else:
                 return lst
@@ -1260,9 +1360,11 @@ def parse_toih(season, game, force_overwrite=False):
             namei = name.index(' ')
             name = name[:namei] + ' ' + fixname(name[namei + 1:])
             hdict[name_short.upper()] = name[2:].strip()
-            if len(name_short).split(' ') > 2:
+            hdict[name_short[:name_short.index(' ')]] = name[2:].strip()
+            if len(name_short.split(' ')) > 2:
                 name_short = ' '.join(name_short.split(' ')[:2])
                 hdict[name_short.upper()] = name[2:].strip()
+                hdict[name_short[:name_short.index(' ')]] = name[2:].strip()
             line = data2[i][data2[i].index('Start of Shift') + 1:]
             line = line[:line.index('Per')].split('>')
             shift_data_startend[name] = []
@@ -1286,6 +1388,34 @@ def parse_toih(season, game, force_overwrite=False):
                         print('Error getting period in', line[j + 2])
                 start = line[j2 + 4].split(' ')[0]
                 end = line[j2 + 6].split(' ')[0]
+
+                duration = line[j2 + 8][:-4].strip()
+
+                try:
+                    duration = convert_time(duration, 1)
+                except ValueError:
+                    duration = -1
+
+                try:
+                    startconvert = convert_time(start, period)
+                except ValueError:
+                    if start == '-1:0-2':
+                        start = '0:00'
+                    else:
+                        print('error with start time of shift', start)
+                try:
+                    endconvert = convert_time(end, period)
+                except ValueError:
+                    if end == '-1:0-2':
+                        end = '0:00'
+                        if convert_time(start, period) > convert_time(end, period):
+                            end = '20:00' #just in case
+                    elif end == '&nbsp;' and not duration == -1:
+                        end = convert_time(start, period) + duration
+                        end = convert_time(end)
+                    else:
+                        print('error with end time of shift', end)
+
                 shift_data_startend[name].append([period, start, end])
 
         w = open(parsed_fname, 'w')
@@ -1341,9 +1471,11 @@ def parse_toiv(season, game, force_overwrite=False):
             namei = name.index(' ')
             name = name[:namei] + ' ' + fixname(name[namei + 1:])
             rdict[name_short.upper()] = name[2:].strip()
-            if len(name_short).split(' ') > 2:
+            rdict[name_short[:name_short.index(' ')]] = name[2:].strip()
+            if len(name_short.split(' ')) > 2:
                 name_short = ' '.join(name_short.split(' ')[:2])
                 rdict[name_short.upper()] = name[2:].strip()
+                rdict[name_short[:name_short.index(' ')]] = name[2:].strip()
             line = data2[i][data2[i].index('Start of Shift') + 1:]
             line = line[:line.index('Per')].split('>')
             shift_data_startend[name] = []
@@ -1367,6 +1499,33 @@ def parse_toiv(season, game, force_overwrite=False):
                         print('Error getting period in', line[j2 + 2])
                 start = line[j2 + 4].split(' ')[0]
                 end = line[j2 + 6].split(' ')[0]
+                duration = line[j2 + 8][:-4].strip()
+
+                try:
+                    duration = convert_time(duration, 1)
+                except ValueError:
+                    duration = -1
+
+                try:
+                    startconvert = convert_time(start, period)
+                except ValueError:
+                    if start == '-1:0-2':
+                        start = '0:00'
+                    else:
+                        print('error with start time of shift', start)
+                try:
+                    endconvert = convert_time(end, period)
+                except ValueError:
+                    if end == '-1:0-2':
+                        end = '0:00'
+                        if convert_time(start, period) > convert_time(end, period):
+                            end = '20:00' #just in case
+                    elif end == '&nbsp;' and not duration == -1:
+                        end = convert_time(start, period) + duration
+                        end = convert_time(end)
+                    else:
+                        print('error with end time of shift', end)
+
                 shift_data_startend[name].append([period, start, end])
 
         w = open(parsed_fname, 'w')
@@ -1401,7 +1560,7 @@ def save_toimatrix(season, game, force_overwrite=False):
                     scoretimes[convert_time(line[3])] = line[4]
                     prev_goal = False
                 except ValueError:
-                    print(str(line))
+                    print(season, game, 'error saving toimatrix', str(line))
                     break
             if len(line) == 1:
                 break
@@ -1420,7 +1579,7 @@ def save_toimatrix(season, game, force_overwrite=False):
                             if name not in home_positionmap:
                                 home_positionmap[name] = pos
                         else:
-                            print(str(line))
+                            print(season, game, 'error saving toimatrix', str(line))
             players = line[13].split(';')
             if len(players) > 1:
                 for p in players:
@@ -1432,7 +1591,7 @@ def save_toimatrix(season, game, force_overwrite=False):
                         if name not in road_positionmap:
                             road_positionmap[name] = pos
                     else:
-                        print(str(line))
+                        print(season, game, 'error saving toimatrix', str(line))
 
         matrix = [[[], []] for i in range(3601)]
 
@@ -1457,7 +1616,7 @@ def save_toimatrix(season, game, force_overwrite=False):
                         for i in range(start + 1, end):
                             matrix[i][count].append(current_player)
                     except ValueError:
-                        print(str(line))
+                        print(season, game, 'error saving toimatrix', str(line))
 
             r.close()
 
@@ -1565,7 +1724,107 @@ def get_teamlist(season):
         exclude_teams.add('WPG')
         exclude_teams.remove('ATL')
     return [team for team in TEAMS if team not in exclude_teams]
+def teampages(season, new_games=False):
+    """Leave new_games as none or False to force_overwrite"""
+    import os.path
+    import os
+    teamlst = get_teamlist(season)
+    lognames = {team: get_team_pbplog_filename(season, team) for team in teamlst}
+    toilognames = {team: get_team_toilog_filename(season, team) for team in teamlst}
+    writers = {}
+    toiwriters = {}
+    for team in lognames:
+        if new_games is None or not new_games or not os.path.isfile(lognames[team]):
+            writers[team] = open(lognames[team], 'w')
+            writers[team].write('Game,Opp,Period,Strength,Time,Score,Event,Team,Zone,Actor,Recipient,Note,XY')
+            writers[team].write(',{0:s} on ice,Opp on ice'.format(team))
+            toiwriters[team] = open(toilognames[team], 'w')
+            toiwriters[team].write('Game,Opp,Time,Score,Strength')
+            toiwriters[team].write(',{0:s} on ice,Opp on ice'.format(team))
+        else:
+            writers[team] = open(lognames[team], 'a')
+            toiwriters[team] = open(toilognames[team], 'a')
+    if new_games is None or not new_games:
+        gamelst = []
+        files = os.listdir(get_parsed_gamesheet_folder(season))
+        for file in files:
+            if file[-7:] == 'PBP.csv':
+                gamelst.append(int(file[:-7]))
 
+    else:
+        gamelst = new_games
+    homenames = []
+    roadnames = []
+    for game in gamelst:
+        if 30417 >= game >= 20001:
+            r = open(get_parsed_pbp_filename(season, game), 'r')
+            r2 = open(get_parsed_toimatrix_filename(season, game), 'r')
+            teamnames = r.readline()
+            teamnames = teamnames.split(':')[1].strip().split('@')
+            homenames.append(TEAM_MAP[teamnames[1]])
+            roadnames.append(TEAM_MAP[teamnames[0]])
+            for i in range(5):
+                r.readline()
+            data = r.read().strip().split('\n')
+            r.close()
+            for line in data:
+                if len(line) == 0:
+                    break
+                line2 = line.split(',')
+                strength = line2[2]
+                strength_rev = 'v'.join(strength.split('v')[::-1])
+                score = line2[4]
+                score_rev = '-'.join(score.split('-')[::-1])
+                zone = line2[7]
+                zone_rev = zone
+                if zone == 'Off':
+                    zone_rev = 'Def'
+                elif zone == 'Def':
+                    zone_rev = 'Off'
+                loc = line2[11]
+                loc2 = loc[1:-1].split(';')
+                loc_rev = loc[1:-1].split(';')
+                try:
+                    if int(line2[1]) % 2 == 0:
+                        loc2 = '({0:d};{1:d})'.format(int(loc2[0]) * -1, int(loc2[1]) * -1)
+                        loc_rev = loc
+                    else: #switch
+                        loc_rev = '({0:d};{1:d})'.format(int(loc2[0]) * -1, int(loc2[1]) * -1)
+                        loc2 = loc
+                except ValueError:
+                    loc_rev = loc
+                    loc2 = loc
+                line2[11] = loc2
+                road_line = [line2[0], line2[1], strength_rev, line2[3], score_rev, line2[5], line2[6], zone_rev,
+                             line2[8], line2[9], line2[10], loc_rev, line2[13], line2[12]]
+                writers[roadnames[-1]].write('\n{0:d},@{1:s},'.format(game, homenames[-1]))
+                writers[homenames[-1]].write('\n{0:d},{1:s},'.format(game, roadnames[-1]))
+                writers[homenames[-1]].write(','.join(line2[1:]))
+                writers[roadnames[-1]].write(','.join(road_line[1:]))
+
+            for i in range(1):
+                r2.readline()
+            data = r2.read().strip().split('\n')
+            r2.close()
+            for line in data:
+                if len(line) == 0:
+                    break
+                line2 = line.split(',')
+                strength = line2[2]
+                strength_rev = 'v'.join(strength.split('v')[::-1])
+                score = line2[1]
+                score_rev = '-'.join(score.split('-')[::-1])
+                road_line = [line2[0], score_rev, strength_rev, line2[4], line2[3]]
+                toiwriters[roadnames[-1]].write('\n{0:d},@{1:s},'.format(game, homenames[-1]))
+                toiwriters[homenames[-1]].write('\n{0:d},{1:s},'.format(game, roadnames[-1]))
+                toiwriters[homenames[-1]].write(','.join(line2))
+                toiwriters[roadnames[-1]].write(','.join(road_line))
+
+    for w in writers:
+        writers[w].close()
+    for w in toiwriters:
+        toiwriters[w].close()
+    print('Done with team pages for', season)
 
 def write(season, force_overwrite=False):
     """Writes season data"""
@@ -1587,7 +1846,7 @@ def fixname(name):
             return NAMES[name]
         return formatname(name)
     else:
-        print('problem with name:', name)
+        print('problem with name:', name) #usually, no name/number listed
         return 'n/a'
 
 
@@ -1611,6 +1870,8 @@ def fix_penalty(penaltyname):
 def convert_time(time, period=0, countdown=False):
     """Converts time from seconds to min:sec in period, or vice versa. countdown=True-->start of period is 20:00
     countdown=true only works for regular season re: OT"""
+    if time == 'END':
+        return convert_time('0:00', period+1)
     if not countdown:
         if isinstance(time, str):
             elap = int(time[:time.index(':')]) * 60 + int(time[time.index(':') + 1:])
@@ -1631,7 +1892,6 @@ def convert_time(time, period=0, countdown=False):
             else:
                 return 1200 * period - elap
         else:
-            # TODO
             min = time // 60
             time -= min * 60
             if time < 10:
