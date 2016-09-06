@@ -141,7 +141,7 @@ NAMES = {'n/a': 'n/a', 'ALEXANDER OVECHKIN': 'Alex Ovechkin', 'TOBY ENSTROM': 'T
          'JEAN-FRANCOIS JACQUES': 'JF Jacques', 'OLE-KRISTIAN TOLLEFSEN': 'Ole-Kristian Tollefsen',
          'MARC-ANDRE BERGERON': 'Marc-Andre Bergeron', 'MARC-ANTOINE POULIOT': 'Marc-Antoine Pouliot',
          'MARC-ANDRE GRAGNANI': 'Marc-Andre Gragnani', 'JORDAN LAVALLEE-SMOTHERMAN': 'Jordan Lavallee-Smotherman',
-         'PIERRE-LUC LETOURNEAU-LEBLOND': 'Pierre Leblond', 'J-F JACQUES': 'JF Jacques',
+         'PIERRE-LUC LETOURNEAU-LEBLOND': 'Pierre Leblond', 'J-F JACQUES': 'JF Jacques', 'JP DUMONT': 'JP Dumont',
          'MARC-ANDRE CLICHE': 'Marc-Andre Cliche', 'J-P DUMONT': 'JP Dumont', 'JOSHUA BAILEY': 'Josh Bailey',
          'OLIVIER MAGNAN-GRENIER': 'Olivier Magnan-Grenier', 'FRÉDÉRIC ST-DENIS': 'Frederic St-Denis',
          'MARC-ANDRE BOURDON': 'Marc-Andre Bourdon', 'PIERRE-CEDRIC LABRIE': 'Pierre-Cedric Labrie',
@@ -191,7 +191,10 @@ NAMES = {'n/a': 'n/a', 'ALEXANDER OVECHKIN': 'Alex Ovechkin', 'TOBY ENSTROM': 'T
          'JT WYMAN': 'JT Wyman', 'NIKOLAY ZHERDEV': 'Nikolai Zherdev', 'HARRISON ZOLNIERCZYK': 'Harry Zolnierczyk',
          'MARTIN ST PIERRE': 'Martin St. Pierre', 'DENIS GAUTHIER JR.': 'Denis Gauthier Jr.',
          'MARC-ANDRE FLEURY': 'Marc-Andre Fleury', 'DAN LACOUTURE': 'Dan LaCouture', 'RICK DIPIETRO': 'Rick DiPietro',
-         'JOEY MACDONALD': 'Joey MacDonald', 'B.J CROMBEEN': 'BJ Crombeen', 'TIMOTHY JR. THOMAS': 'Tim Thomas'}
+         'JOEY MACDONALD': 'Joey MacDonald', 'B.J CROMBEEN': 'BJ Crombeen', 'TIMOTHY JR. THOMAS': 'Tim Thomas',
+         'ILJA BRYZGALOV': 'Ilya Bryzgalov'}
+for name, namefix in NAMES.copy().items():
+    NAMES[namefix.upper()] = namefix
 CURRENT_TEAMS = ['CAR', 'WSH', 'T.B', 'WPG', 'FLA', 'NYR', 'NYI', 'PHI', 'PIT', 'N.J', 'BOS', 'MTL', 'BUF', 'TOR', 'OTT',
                  'DET', 'CHI', 'STL', 'NSH', 'CBJ', 'MIN', 'COL', 'VAN', 'CGY', 'EDM', 'ANA', 'S.J', 'L.A', 'ARI', 'DAL']
 
@@ -607,6 +610,14 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
     if not os.path.exists(folder):
         os.makedirs(folder) #creates parsed gamesheet folder if it does not exist
     fname = get_parsed_pbp_filename(season, game)
+
+    if player_short_to_long is not None:
+        for key in player_short_to_long:
+            for pname in player_short_to_long[key]:
+                player_short_to_long[key][pname] = fixname(player_short_to_long[key][pname])
+            player_short_to_long[key]['N/A'] = 'n/a'
+            player_short_to_long[key]['#N/A'] = 'n/a'
+
     if force_overwrite or not os.path.isfile(fname):
         try:
             r = open(get_pbp_filename(season, game), 'r') #opens a reader for the PBP HTML
@@ -636,7 +647,7 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
             events = read_events(data, xy, TEAM_MAP[homename], TEAM_MAP[roadname])
 
             if player_short_to_long is not None and len(player_short_to_long) > 1 \
-                    and (len(player_short_to_long[hshort]) > 0 or len(player_short_to_long[rshort]) > 0):
+                    and (len(player_short_to_long[hshort]) > 2 or len(player_short_to_long[rshort]) > 2):
                 for i in range(len(events)):
                     try:
                         if not events[i][8] == 'n/a':
@@ -652,7 +663,7 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
                                 elif events[i][8].upper() in player_short_to_long[rshort] or events[i][9].upper() in player_short_to_long[hshort]:
                                     events[i][6] = rshort
                                 else:
-                                    if len(player_short_to_long[rshort]) + len(player_short_to_long[hshort]) < 40:
+                                    if len(player_short_to_long[rshort]) + len(player_short_to_long[hshort]) < 44:
                                         pass
                                     elif events[i][8] == '#Team' or events[i][9] == '#Team':
                                         pass
@@ -674,13 +685,13 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
                         elif events[i][9] == '#':
                             events[i][9] = 'n/a'
                         else:
-                            if len(player_short_to_long[rshort]) + len(player_short_to_long[hshort]) < 38:
+                            if len(player_short_to_long[rshort]) + len(player_short_to_long[hshort]) < 42:
                                 pass
                             elif events[i][8] == '#Team' or events[i][9] == '#Team':
                                 pass
-                            elif len(player_short_to_long[rshort]) >= 19:
+                            elif len(player_short_to_long[rshort]) >= 21:
                                 pass #TODO
-                            elif len(player_short_to_long[hshort]) >= 19:
+                            elif len(player_short_to_long[hshort]) >= 21:
                                 pass #TODO
                             else:
                                 print(season, game, 'Which team?', events[i])
@@ -867,10 +878,10 @@ def read_events(gamedata, xy, hname, rname):
                 evnumber = 0
                 period = 1
                 team = 'CBJ'
-                actor = '#8 Horton'
+                actor = 'Nathan Horton'
                 recip = 'n/a'
                 zone = 'Off'
-                note = 'Assists: #11 CALVERT; #21 WISNIEWSKI'
+                note = 'Assists: Matt Calvert; James Wisniewski'
                 strength = '0v0'
                 time = '0:00'
                 event_xy = '(n/a;n/a)'
@@ -888,8 +899,10 @@ def read_events(gamedata, xy, hname, rname):
             except ValueError: #sometimes time listed as 21:0-1 in shootouts
                 if period == 5:
                     time = '0:00'
+                elif period == 4 and time == '-16:0-1 20:00':
+                    time = '0:00'
                 else:
-                    print(season, game, 'error with time', rel_data)
+                    print('error with time', rel_data)
             team, zone, actor, recip, note = get_team_zone_player_recipient_note(gamedata[event_is[i]:event_is[i] + 2], hname, rname)
             if team == rname or evtype == 'BLOCK' and not team == hname:
                 if zone == 'Off':
@@ -1359,12 +1372,12 @@ def parse_toih(season, game, force_overwrite=False):
             name_short = '#' + name[:name.index(',')]
             namei = name.index(' ')
             name = name[:namei] + ' ' + fixname(name[namei + 1:])
-            hdict[name_short.upper()] = name[2:].strip()
-            hdict[name_short[:name_short.index(' ')]] = name[2:].strip()
+            hdict[name_short.upper()] = fixname(name[2:].strip())
+            hdict[name_short[:name_short.index(' ')]] = fixname(name[2:].strip())
             if len(name_short.split(' ')) > 2:
                 name_short = ' '.join(name_short.split(' ')[:2])
-                hdict[name_short.upper()] = name[2:].strip()
-                hdict[name_short[:name_short.index(' ')]] = name[2:].strip()
+                hdict[name_short.upper()] = fixname(name[2:].strip())
+                hdict[name_short[:name_short.index(' ')]] = fixname(name[2:].strip())
             line = data2[i][data2[i].index('Start of Shift') + 1:]
             line = line[:line.index('Per')].split('>')
             shift_data_startend[name] = []
@@ -1470,12 +1483,12 @@ def parse_toiv(season, game, force_overwrite=False):
             name_short = '#' + name[:name.index(',')]
             namei = name.index(' ')
             name = name[:namei] + ' ' + fixname(name[namei + 1:])
-            rdict[name_short.upper()] = name[2:].strip()
-            rdict[name_short[:name_short.index(' ')]] = name[2:].strip()
+            rdict[name_short.upper()] = fixname(name[2:].strip())
+            rdict[name_short[:name_short.index(' ')]] = fixname(name[2:].strip())
             if len(name_short.split(' ')) > 2:
                 name_short = ' '.join(name_short.split(' ')[:2])
-                rdict[name_short.upper()] = name[2:].strip()
-                rdict[name_short[:name_short.index(' ')]] = name[2:].strip()
+                rdict[name_short.upper()] = fixname(name[2:].strip())
+                rdict[name_short[:name_short.index(' ')]] = fixname(name[2:].strip())
             line = data2[i][data2[i].index('Start of Shift') + 1:]
             line = line[:line.index('Per')].split('>')
             shift_data_startend[name] = []
@@ -1834,7 +1847,7 @@ def write(season, force_overwrite=False):
 
 def fixname(name):
     """Fixes and reformats names"""
-    name = name.strip()
+    name = name.strip().upper()
     if ',' in name:
         name = name.split(',')
         name = name[1] + ' ' + name[0]
@@ -1927,3 +1940,4 @@ def get_season_gamelist(season):
 def get_mascot_name(team):
     """Get team mascot name"""
     return MASCOT_NAMES[team.upper()]
+
