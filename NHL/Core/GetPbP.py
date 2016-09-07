@@ -1978,3 +1978,8 @@ def get_mascot_name(team):
     """Get team mascot name"""
     return MASCOT_NAMES[team.upper()]
 
+def get_team_colors(team):
+    """Gets suggested colors from TEAM_COLOR_DCT and TEAM_COLOR_DCT2"""
+    if team in {'STL', 'EDM', 'CGY', 'MTL'}:
+        return TEAM_COLOR_DCT[team]
+    return TEAM_COLOR_DCT2[team]
