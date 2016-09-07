@@ -50,9 +50,11 @@ def read_muneeb_score_adjustments():
     r.close()
 
 
-def score_adjust(info, perspective_team, method='Micah'):
+def score_adjust(info, perspective_team, method='Micah', force_hr=None):
     """Perspective team will be checked against acting team. Default method is @IneffectiveMath's for score-adj fenwick
-    Can also adjust other event types with method='Muneeb'"""
+    Can also adjust other event types with method='Muneeb'
+
+    If 'info' is from game pbp, not team log pbp, set force_hr to 'home' or 'road' (whatever perspective team is)"""
 
     method = method.lower()
 
@@ -63,15 +65,19 @@ def score_adjust(info, perspective_team, method='Micah'):
     elif scorediff > 3:
         scorediff = 3
     coefi = 0
-    if info[0] == '@':
-        coefi = 1
+    if force_hr is None:
+        if info[0] == '@':
+            coefi = 1
+    else:
+        if force_hr == 'road':
+            coefi = 1
     if method == 'micah':
         if get_acting_team(info) == perspective_team:
             return SCORE_ADJUSTMENTS[method][scorediff][coefi]
         else:
             return SCORE_ADJUSTMENTS[method][-1 * scorediff][1 - coefi]
     elif method == 'muneeb':
-        if method == 'muneeb' and len(SCORE_ADJUSTMENTS['muneeb']) == 0:
+        if len(SCORE_ADJUSTMENTS['muneeb']) == 0:
             read_muneeb_score_adjustments()
         if get_acting_team(info) == perspective_team:
             return SCORE_ADJUSTMENTS[method][coefi][get_event_type(info)][scorediff]
@@ -965,39 +971,260 @@ def get_gamebygame_data_filename(season):
     """Helper method for Tableau charts"""
     return '{0:s}{1:d} gamebygame.csv'.format(GetPbP.get_additional_data_folder(), season)
 
+def update_zs_info(season, game, hname, rname, base_dct, gamedata):
+    """Helper method for gen_gamebygame, updates gamedata on ZS info"""
+    
+    for line in read_game_pbp(season, game, ['FAC']):
+        hps = get_home_players(line, ['F', 'D'])
+        rps = get_road_players(line, ['F', 'D'])
+        for p in hps:
+            if p not in gamedata['Home']:
+                gamedata['Home'][p] = {k:v for k, v in base_dct.items()}
+        for p in rps:
+            if p not in gamedata['Road']:
+                gamedata['Road'][p] = {k:v for k, v in base_dct.items()}
+        ez = get_event_zone(line)
+        act = get_acting_team(line)
+        if ez == 'Def':
+            if act == hname:
+                for p in hps:
+                    gamedata['Home'][p]['DZ'] += 1
+                for p in rps:
+                    gamedata['Road'][p]['OZ'] += 1
+            else:
+                for p in hps:
+                    gamedata['Home'][p]['OZ'] += 1
+                for p in rps:
+                    gamedata['Road'][p]['DZ'] += 1
+        elif ez == 'Off':
+            if act == hname:
+                for p in hps:
+                    gamedata['Home'][p]['OZ'] += 1
+                for p in rps:
+                    gamedata['Road'][p]['DZ'] += 1
+            else:
+                for p in hps:
+                    gamedata['Home'][p]['DZ'] += 1
+                for p in rps:
+                    gamedata['Road'][p]['OZ'] += 1
+        else:
+            for p in hps:
+                gamedata['Home'][p]['NZ'] += 1
+            for p in rps:
+                gamedata['Road'][p]['NZ'] += 1
+
+def update_corsi_info(season, game, hname, rname, base_dct, gamedata):
+    """Helper method for gen_gamebygame, updates gamedata on corsi info (including indiv stats)
+    
+    Returns homecf, homeca, homesacf, homesaca, homegf, homega"""
+    
+    homecf = homeca = homesacf = homesaca = homegf = homega = 0
+    
+    for line in read_game_corsi(season, game):
+        hps = get_home_players(line, ['F', 'D'])
+        rps = get_road_players(line, ['F', 'D'])
+        goal = get_event_type(line) == 'GOAL'
+        shooter = get_acting_player(line)
+
+        if get_acting_team(line) == hname:
+            homecf += 1
+            dsacf = score_adjust(line, hname, 'muneeb', 'home')
+            homesacf += dsacf
+            if goal:
+                homegf += 1
+                assists = get_assists(line)
+                for i, a in enumerate(assists):
+                    if a not in gamedata['Home']:
+                        gamedata['Home'][a] = {k:v for k, v in base_dct.items()}
+                    gamedata['Home'][a]['iA{0:d}'.format(i + 1)] += 1
+            for p in hps:
+                if p not in gamedata['Home']:
+                    gamedata['Home'][p] ={k:v for k, v in base_dct.items()}
+                gamedata['Home'][p]['CF'] += 1
+                gamedata['Home'][p]['SACF'] += dsacf
+                if goal:
+                    gamedata['Home'][p]['GF'] += 1
+            for p in rps:
+                if p not in gamedata['Road']:
+                    gamedata['Road'][p] = {k:v for k, v in base_dct.items()}
+                gamedata['Road'][p]['CA'] += 1
+                gamedata['Road'][p]['SACA'] += dsacf
+                if goal:
+                    gamedata['Road'][p]['GA'] += 1
+            if shooter not in gamedata['Home']:
+                gamedata['Home'][shooter] = {k:v for k, v in base_dct.items()}
+            gamedata['Home'][shooter]['iCF'] += 1
+            if goal:
+                gamedata['Home'][shooter]['iG'] += 1
+        else:
+            homeca += 1
+            dsaca = score_adjust(line, rname, 'muneeb', 'road')
+            homesaca += dsaca
+            if goal:
+                homega += 1
+                assists = get_assists(line)
+                for i, a in enumerate(assists):
+                    if a not in gamedata['Road']:
+                        gamedata['Road'][a] = {k:v for k, v in base_dct.items()}
+                    gamedata['Road'][a]['iA{0:d}'.format(i + 1)] += 1
+            for p in hps:
+                if p not in gamedata['Home']:
+                    gamedata['Home'][p] = {k:v for k, v in base_dct.items()}
+                gamedata['Home'][p]['CA'] += 1
+                gamedata['Home'][p]['SACA'] += dsaca
+                if goal:
+                    gamedata['Home'][p]['GA'] += 1
+            for p in rps:
+                if p not in gamedata['Road']:
+                    gamedata['Road'][p] = {k:v for k, v in base_dct.items()}
+                gamedata['Road'][p]['CF'] += 1
+                gamedata['Road'][p]['SACF'] += dsaca
+                if goal:
+                    gamedata['Road'][p]['GF'] += 1
+            if shooter not in gamedata['Road']:
+                gamedata['Road'][shooter] = {k:v for k, v in base_dct.items()}
+            gamedata['Road'][shooter]['iCF'] += 1
+            if goal:
+                gamedata['Road'][shooter]['iG'] += 1
+    
+    return homecf, homeca, homesacf, homesaca, homegf, homega
+
+def update_qoc_qot_toi_info(season, game, hname, rname, posmap, base_dct, playerids,
+                                              fqoc, fqot, dqoc, dqot, gamedata):
+    """Helper method for gen_gamebygame, updating last five dicts passed to it on TOI info. Returns hometoi"""
+    
+    hometoi = 0
+    
+    for line in read_game_toi(season, game):
+        hf = get_home_players(line, ['F'])
+        for p in hf:
+            posmap[hname + p] = 'F'
+        hd = get_home_players(line, ['D'])
+        for p in hd:
+            posmap[hname + p] = 'D'
+        rf = get_road_players(line, ['F'])
+        for p in rf:
+            posmap[rname + p] = 'F'
+        rd = get_road_players(line, ['D'])
+        for p in rd:
+            posmap[rname + p] = 'D'
+        for p in hf + hd:
+            name = hname + p
+            if name not in playerids:
+                playerids[name] = len(playerids)
+        for p in rf + rd:
+            name = rname + p
+            if name not in playerids:
+                playerids[name] = len(playerids)
+        for p in hf + hd:
+            p2 = hname + p
+            if playerids[p2] not in fqoc[game]:
+                fqoc[game][playerids[p2]] = []
+                fqot[game][playerids[p2]] = []
+                dqoc[game][playerids[p2]] = []
+                dqot[game][playerids[p2]] = []
+
+        for p in rf + rd:
+            p2 = rname + p
+            if playerids[p2] not in fqoc[game]:
+                fqoc[game][playerids[p2]] = []
+                fqot[game][playerids[p2]] = []
+                dqoc[game][playerids[p2]] = []
+                dqot[game][playerids[p2]] = []
+
+        #qoc
+        for hp in hf:
+            p = hname + hp
+            for rp in rf:
+                p2 = rname + rp
+                fqoc[game][playerids[p]].append(playerids[p2])
+                fqoc[game][playerids[p2]].append(playerids[p])
+            for rp in rd:
+                p2 = rname + rp
+                dqoc[game][playerids[p]].append(playerids[p2])
+                fqoc[game][playerids[p2]].append(playerids[p])
+        for hp in hd:
+            p = hname + hp
+            for rp in rf:
+                p2 = rname + rp
+                fqoc[game][playerids[p]].append(playerids[p2])
+                dqoc[game][playerids[p2]].append(playerids[p])
+            for rp in rd:
+                p2 = rname + rp
+                dqoc[game][playerids[p]].append(playerids[p2])
+                dqoc[game][playerids[p2]].append(playerids[p])
+
+        #qot
+        for hp in hf + hd:
+            p = hname + hp
+            for hp2 in hf:
+                p2 = hname + hp2
+                if not p == p2:
+                    fqot[game][playerids[p]].append(playerids[p2])
+            for hp2 in hd:
+                p2 = hname + hp2
+                if not p == p2:
+                    dqot[game][playerids[p]].append(playerids[p2])
+        for rp in rf + rd:
+            p = rname + rp
+            for rp2 in rf:
+                p2 = rname + rp2
+                if not p == p2:
+                    fqot[game][playerids[p]].append(playerids[p2])
+            for rp2 in rd:
+                p2 = rname + rp2
+                if not p == p2:
+                    dqot[game][playerids[p]].append(playerids[p2])
+
+        hps = hf + hd
+        rps = rf + rd
+        hometoi += 1
+        for p in hps:
+            if p not in gamedata['Home']:
+                gamedata['Home'][p] = {k:v for k, v in base_dct.items()}
+            gamedata['Home'][p]['TOI'] += 1
+        for p in rps:
+            if p not in gamedata['Road']:
+                gamedata['Road'][p] = {k:v for k, v in base_dct.items()}
+            gamedata['Road'][p]['TOI'] += 1
+            
+    return hometoi
+
 def gen_gamebygame(season, reparse=False):
-    """Helper method for Tableau charts, game-by-game stats"""
+    """Writes game-by-game to file, useful method for Tableau and other charts"""
+
+    base_dct = {'CF': 0, 'CA': 0, 'SACF': 0, 'SACA': 0,
+                'TOI': 0,
+                'GF': 0, 'GA': 0,
+                'DZ': 0, 'NZ': 0, 'OZ': 0,
+                'iG': 0, 'iCF': 0, 'iA1': 0, 'iA2': 0}
+
     w = open(get_gamebygame_data_filename(season), 'w')
     w.write('Player,Team,Pos,Game,Season,Date,TOION(60s),CFON,CAON,TOIOFF(60s),CFOFF,CAOFF,GFON,GAON,GFOFF,GAOFF,')
-    w.write('FComp,DComp,FTeam,DTeam,F Faced,D Faced,F With,D With,DZS,NZS,OZS,iG,iCF,iA1,iA2')
+    w.write('FComp,DComp,FTeam,DTeam,F Faced,D Faced,F With,D With,DZS,NZS,OZS,iG,iCF,iA1,iA2,')
+    w.write('SACFON,SACAON,SACFOFF,SACAOFF')
+    posmap = {}
+    playerids = {}
     fqoc = {}
     dqoc = {}
     fqot = {}
     dqot = {}
-    posmap = {}
-    playerids = {}
-    playerids[season] = {}
-    fqoc[season] = {}
-    dqoc[season] = {}
-    fqot[season] = {}
-    dqot[season] = {}
+    toion_dct = {}
+    toioff_dct = {}
     for game in get_season_games(season):
+        if game % 200 == 1 or game == 30111:
+            print('Status:', season, game)
         if reparse:
             try:
                 GetPbP.parse_game(season, game, True)
             except Exception as e:
                 print('ISSUE WITH', season, game, e, e.args)
-        fqoc[season][game] = {}
-        fqot[season][game] = {}
-        dqoc[season][game] = {}
-        dqot[season][game] = {}
+        fqoc[game] = {}
+        fqot[game] = {}
+        dqoc[game] = {}
+        dqot[game] = {}
+        gamedata = {'Home': {}, 'Road': {}}
         try:
-            homecf = 0
-            homeca = 0
-            homegf = 0
-            homega = 0
-            hometoi = 0
-            gamedata = {'Home': {}, 'Road': {}}
             r = open(GetPbP.get_parsed_pbp_filename(season, game), 'r')
             headers = r.readline()
             rname = GetPbP.TEAM_MAP[headers[headers.index(':') + 2:headers.index('@')]]
@@ -1013,211 +1240,70 @@ def gen_gamebygame(season, reparse=False):
             yr = date[-2:]
             date = '{0:s}-{1:s}-{2:s}'.format(day, month, yr)  # DD-Mmm-YY
             r.close()
-
-            for line in read_game_toi(season, game):
-                hf = get_home_players(line, ['F'])
-                for p in hf:
-                    posmap[hname + p] = 'F'
-                hd = get_home_players(line, ['D'])
-                for p in hd:
-                    posmap[hname + p] = 'D'
-                rf = get_road_players(line, ['F'])
-                for p in rf:
-                    posmap[rname + p] = 'F'
-                rd = get_road_players(line, ['D'])
-                for p in rd:
-                    posmap[rname + p] = 'D'
-                for p in hf + hd:
-                    name = hname + p
-                    if name not in playerids[season]:
-                        playerids[season][name] = len(playerids[season])
-                for p in rf + rd:
-                    name = rname + p
-                    if name not in playerids[season]:
-                        playerids[season][name] = len(playerids[season])
-                for p in hf + hd:
-                    p2 = hname + p
-                    if playerids[season][p2] not in fqoc[season][game]:
-                        fqoc[season][game][playerids[season][p2]] = []
-                        fqot[season][game][playerids[season][p2]] = []
-                        dqoc[season][game][playerids[season][p2]] = []
-                        dqot[season][game][playerids[season][p2]] = []
-
-                for p in rf + rd:
-                    p2 = rname + p
-                    if playerids[season][p2] not in fqoc[season][game]:
-                        fqoc[season][game][playerids[season][p2]] = []
-                        fqot[season][game][playerids[season][p2]] = []
-                        dqoc[season][game][playerids[season][p2]] = []
-                        dqot[season][game][playerids[season][p2]] = []
-
-                #qoc
-                for hp in hf:
-                    p = hname + hp
-                    for rp in rf:
-                        p2 = rname + rp
-                        fqoc[season][game][playerids[season][p]].append(playerids[season][p2])
-                        fqoc[season][game][playerids[season][p2]].append(playerids[season][p])
-                    for rp in rd:
-                        p2 = rname + rp
-                        dqoc[season][game][playerids[season][p]].append(playerids[season][p2])
-                        fqoc[season][game][playerids[season][p2]].append(playerids[season][p])
-                for hp in hd:
-                    p = hname + hp
-                    for rp in rf:
-                        p2 = rname + rp
-                        fqoc[season][game][playerids[season][p]].append(playerids[season][p2])
-                        dqoc[season][game][playerids[season][p2]].append(playerids[season][p])
-                    for rp in rd:
-                        p2 = rname + rp
-                        dqoc[season][game][playerids[season][p]].append(playerids[season][p2])
-                        dqoc[season][game][playerids[season][p2]].append(playerids[season][p])
-
-                #qot
-                for hp in hf + hd:
-                    p = hname + hp
-                    for hp2 in hf:
-                        p2 = hname + hp2
-                        if not p == p2:
-                            fqot[season][game][playerids[season][p]].append(playerids[season][p2])
-                    for hp2 in hd:
-                        p2 = hname + hp2
-                        if not p == p2:
-                            dqot[season][game][playerids[season][p]].append(playerids[season][p2])
-                for rp in rf + rd:
-                    p = rname + rp
-                    for rp2 in rf:
-                        p2 = rname + rp2
-                        if not p == p2:
-                            fqot[season][game][playerids[season][p]].append(playerids[season][p2])
-                    for rp2 in rd:
-                        p2 = rname + rp2
-                        if not p == p2:
-                            dqot[season][game][playerids[season][p]].append(playerids[season][p2])
-
-                hps = hf + hd
-                rps = rf + rd
-                hometoi += 1
-                for p in hps:
-                    if p not in gamedata['Home']:
-                        gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    gamedata['Home'][p][2] += 1
-                for p in rps:
-                    if p not in gamedata['Road']:
-                        gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    gamedata['Road'][p][2] += 1
-
-            for line in read_game_corsi(season, game):
-                hps = get_home_players(line, ['F', 'D'])
-                rps = get_road_players(line, ['F', 'D'])
-                goal = get_event_type(line) == 'GOAL'
-                shooter = get_acting_player(line)
-
-                if get_acting_team(line) == hname:
-                    homecf += 1
-                    if goal:
-                        homegf += 1
-                        assists = get_assists(line)
-                        for i, a in enumerate(assists):
-                            if a not in gamedata['Home']:
-                                gamedata['Home'][a] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                            gamedata['Home'][a][-2+i] += 1
-                    for p in hps:
-                        if p not in gamedata['Home']:
-                            gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                            #[cf, ca, toi, gf, ga, dz, nz, oz, ig, icf, ia1, ia2]
-                        gamedata['Home'][p][0] += 1
-                        if goal:
-                            gamedata['Home'][p][3] += 1
-                    for p in rps:
-                        if p not in gamedata['Road']:
-                            gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        gamedata['Road'][p][1] += 1
-                        if goal:
-                            gamedata['Road'][p][4] += 1
-                    if shooter not in gamedata['Home']:
-                        gamedata['Home'][shooter] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    gamedata['Home'][shooter][6] += 1
-                    if goal:
-                        gamedata['Home'][shooter][5] += 1
-                else:
-                    homeca += 1
-                    if goal:
-                        homega += 1
-                        assists = get_assists(line)
-                        for i, a in enumerate(assists):
-                            if a not in gamedata['Road']:
-                                gamedata['Road'][a] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                            gamedata['Road'][a][-2+i] += 1
-                    for p in hps:
-                        if p not in gamedata['Home']:
-                            gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        gamedata['Home'][p][1] += 1
-                        if goal:
-                            gamedata['Home'][p][4] += 1
-                    for p in rps:
-                        if p not in gamedata['Road']:
-                            gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        gamedata['Road'][p][0] += 1
-                        if goal:
-                            gamedata['Road'][p][3] += 1
-                    if shooter not in gamedata['Road']:
-                        gamedata['Road'][shooter] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    gamedata['Road'][shooter][6] += 1
-                    if goal:
-                        gamedata['Road'][shooter][5] += 1
-            for line in read_game_pbp(season, game, ['FAC']):
-                hps = get_home_players(line, ['F', 'D'])
-                rps = get_road_players(line, ['F', 'D'])
-                for p in hps:
-                    if p not in gamedata['Home']:
-                        gamedata['Home'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                for p in rps:
-                    if p not in gamedata['Road']:
-                        gamedata['Road'][p] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                ez = get_event_zone(line)
-                act = get_acting_team(line)
-                if ez == 'Def':
-                    if act == hname:
-                        for p in hps:
-                            gamedata['Home'][p][5] += 1
-                        for p in rps:
-                            gamedata['Road'][p][7] += 1
-                    else:
-                        for p in hps:
-                            gamedata['Home'][p][7] += 1
-                        for p in rps:
-                            gamedata['Road'][p][5] += 1
-                elif ez == 'Off':
-                    if act == hname:
-                        for p in hps:
-                            gamedata['Home'][p][7] += 1
-                        for p in rps:
-                            gamedata['Road'][p][5] += 1
-                    else:
-                        for p in hps:
-                            gamedata['Home'][p][5] += 1
-                        for p in rps:
-                            gamedata['Road'][p][7] += 1
-                else:
-                    for p in hps:
-                        gamedata['Home'][p][6] += 1
-                    for p in rps:
-                        gamedata['Road'][p][6] += 1
+            
+            #updates dictionaries in-place on TOI info; method to save space
+            hometoi = update_qoc_qot_toi_info(season, game, hname, rname, posmap, base_dct, playerids,
+                                              fqoc, fqot, dqoc, dqot, gamedata) 
+            
+            #updates dictionaries in-place on Corsi info
+            homecf, homeca, homesacf, homesaca, homegf, homega = update_corsi_info(season, game, hname, rname, 
+                                                                                   base_dct, gamedata)
+            
+            #updates dictionaries in-place on ZS info
+            update_zs_info(season, game, hname, rname, base_dct, gamedata)
 
             for p in gamedata['Home']:
                 try:
-                    pos = posmap[hname+p]
-                    lst = [p, hname, pos, str(game), str(season), date, str(gamedata['Home'][p][2] / 3600),
-                           str(gamedata['Home'][p][0]), str(gamedata['Home'][p][1]),
-                           str((hometoi - gamedata['Home'][p][2]) / 3600), str(homecf - gamedata['Home'][p][0]),
-                           str(homeca - gamedata['Home'][p][1]),
-                           str(gamedata['Home'][p][3]), str(gamedata['Home'][p][4]),
-                           str(homegf - gamedata['Home'][p][3]),
-                           str(homega - gamedata['Home'][p][4]),
-                           str(gamedata['Home'][p][5]), str(gamedata['Home'][p][6]), str(gamedata['Home'][p][7]),
-                           str(gamedata['Home'][p][8]), str(gamedata['Home'][p][9]),
-                           str(gamedata['Home'][p][10]), str(gamedata['Home'][p][11])]
+                    p2 = hname + p
+                    pos = posmap[p2]
+
+                    toion = gamedata['Home'][p]['TOI'] / 3600                    
+                    cfon = gamedata['Home'][p]['CF']
+                    caon = gamedata['Home'][p]['CA']
+                    toioff = (hometoi - gamedata['Home'][p]['TOI']) / 3600
+                    cfoff = homecf - gamedata['Home'][p]['CF']
+                    caoff = homeca - gamedata['Home'][p]['CA']
+                    
+                    if p2 not in toion_dct:
+                        toion_dct[p2] = 0
+                        toioff_dct[p2] = 0
+                    toion_dct[p2] += toion
+                    toioff_dct[p2] += toioff
+
+                    gfon = gamedata['Home'][p]['GF']
+                    gaon = gamedata['Home'][p]['GA']
+                    gfoff = homegf - gamedata['Home'][p]['GF']
+                    gaoff = homega - gamedata['Home'][p]['GA']
+
+                    #have to calculate TOI/60 after finishing season, so temporarily set these to zero
+                    fcomp = dcomp = fteam = dteam = 0
+
+                    fcomptot = len(fqoc[game][playerids[p2]])
+                    dcomptot = len(dqoc[game][playerids[p2]])
+                    fteamtot = len(fqot[game][playerids[p2]])
+                    dteamtot = len(dqot[game][playerids[p2]])
+
+                    dzs = gamedata['Home'][p]['DZ']
+                    nzs = gamedata['Home'][p]['NZ']
+                    ozs = gamedata['Home'][p]['OZ']
+
+                    ig = gamedata['Home'][p]['iG']
+                    icf = gamedata['Home'][p]['iCF']
+                    ia1 = gamedata['Home'][p]['iA1']
+                    ia2 = gamedata['Home'][p]['iA2']
+
+                    sacfon = gamedata['Home'][p]['SACF']
+                    sacaon = gamedata['Home'][p]['SACA']
+                    sacfoff = homesacf - gamedata['Home'][p]['SACF']
+                    sacaoff = homesaca - gamedata['Home'][p]['SACA']
+
+                    lst = [str(x) for x in (p, hname, pos, game, season, date, #i = 0 -> 5
+                                            toion, cfon, caon, toioff, cfoff, caoff, #i = 6 -> 11
+                                            gfon, gaon, gfoff, gaoff, #i = 12 -> 15
+                                            fcomp, dcomp, fteam, dteam, #i = 16 -> 19
+                                            fcomptot, dcomptot, fteamtot, dteamtot, #i = 20 -> 23
+                                            dzs, nzs, ozs, ig, icf, ia1, ia2, #i = 24 -> 30
+                                            sacfon, sacaon, sacfoff, sacaoff)] #i = 31 -> 34
                     w.write('\n{0:s}'.format(','.join(lst)))
                 except KeyError:
                     if not p[0] == '#':
@@ -1229,17 +1315,56 @@ def gen_gamebygame(season, reparse=False):
                     #raise KeyError
             for p in gamedata['Road']:
                 try:
-                    pos = posmap[rname+p]
-                    lst = [p, rname, pos, str(game), str(season), date, str(gamedata['Road'][p][2] / 3600),
-                           str(gamedata['Road'][p][0]), str(gamedata['Road'][p][1]),
-                           str((hometoi - gamedata['Road'][p][2]) / 3600), str(homeca - gamedata['Road'][p][0]),
-                           str(homecf - gamedata['Road'][p][1]),
-                           str(gamedata['Road'][p][3]), str(gamedata['Road'][p][4]),
-                           str(homega - gamedata['Road'][p][3]),
-                           str(homegf - gamedata['Road'][p][4]),
-                           str(gamedata['Road'][p][5]), str(gamedata['Road'][p][6]), str(gamedata['Road'][p][7]),
-                           str(gamedata['Road'][p][8]), str(gamedata['Road'][p][9]),
-                           str(gamedata['Road'][p][10]), str(gamedata['Road'][p][11])]
+                    p2 = rname + p
+                    pos = posmap[p2]
+
+                    toion = gamedata['Road'][p]['TOI'] / 3600
+                    cfon = gamedata['Road'][p]['CF']
+                    caon = gamedata['Road'][p]['CA']
+                    toioff = (hometoi - gamedata['Road'][p]['TOI']) / 3600
+                    cfoff = homeca - gamedata['Road'][p]['CF']
+                    caoff = homecf - gamedata['Road'][p]['CA']
+                    
+                    if p2 not in toion_dct:
+                        toion_dct[p2] = 0
+                        toioff_dct[p2] = 0
+                    toion_dct[p2] += toion
+                    toioff_dct[p2] += toioff
+
+                    gfon = gamedata['Road'][p]['GF']
+                    gaon = gamedata['Road'][p]['GA']
+                    gfoff = homega - gamedata['Road'][p]['GF']
+                    gaoff = homegf - gamedata['Road'][p]['GA']
+
+                    #have to calculate TOI/60 after finishing season, so temporarily set these to zero
+                    fcomp = dcomp = fteam = dteam = 0
+
+                    fcomptot = len(fqoc[game][playerids[p2]])
+                    dcomptot = len(dqoc[game][playerids[p2]])
+                    fteamtot = len(fqot[game][playerids[p2]])
+                    dteamtot = len(dqot[game][playerids[p2]])
+
+                    dzs = gamedata['Road'][p]['DZ']
+                    nzs = gamedata['Road'][p]['NZ']
+                    ozs = gamedata['Road'][p]['OZ']
+
+                    ig = gamedata['Road'][p]['iG']
+                    icf = gamedata['Road'][p]['iCF']
+                    ia1 = gamedata['Road'][p]['iA1']
+                    ia2 = gamedata['Road'][p]['iA2']
+
+                    sacfon = gamedata['Road'][p]['SACF']
+                    sacaon = gamedata['Road'][p]['SACA']
+                    sacfoff = homesaca - gamedata['Road'][p]['SACF']
+                    sacaoff = homesacf - gamedata['Road'][p]['SACA']
+
+                    lst = [str(x) for x in (p, rname, pos, game, season, date, #i = 0 -> 5
+                                            toion, cfon, caon, toioff, cfoff, caoff, #i = 6 -> 11
+                                            gfon, gaon, gfoff, gaoff, #i = 12 -> 15
+                                            fcomp, dcomp, fteam, dteam, #i = 16 -> 19
+                                            fcomptot, dcomptot, fteamtot, dteamtot, #i = 20 -> 23
+                                            dzs, nzs, ozs, ig, icf, ia1, ia2, #i = 24 -> 30
+                                            sacfon, sacaon, sacfoff, sacaoff)] #i = 31 -> 34
                     w.write('\n{0:s}'.format(','.join(lst)))
                 except KeyError:
                     if not p[0] == '#':
@@ -1252,7 +1377,54 @@ def gen_gamebygame(season, reparse=False):
         except IndexError as e:
             print(season, game, e, e.args)
     w.close()
-    print('Done generating game-by-game for', season)
+    
+    print('Done generating game-by-game for', season, ' (pass 1)')
+
+    #calculate toi60
+    toi60 = {name: toion_dct[name]*60/(toion_dct[name]+toioff_dct[name]) for name in toion_dct}
+    print('Done calculating TOI/60')
+
+    #add in qoc and qot info
+
+    r = open(get_gamebygame_data_filename(season), 'r')
+    data = [line.split(',') for line in r.read().strip().split('\n')]
+    r.close()
+
+    for k, v in playerids.copy().items():
+        playerids[v] = k
+    
+    for i in range(1, len(data)):
+        #print(data[i])
+        game = int(data[i][3])
+        p2 = data[i][1] + data[i][0]
+        
+        fcomp = 0
+        for opp in fqoc[game][playerids[p2]]:
+            fcomp += toi60[playerids[opp]]
+        data[i][16] = str(fcomp)
+
+        dcomp = 0
+        for opp in dqoc[game][playerids[p2]]:
+            dcomp += toi60[playerids[opp]]
+        data[i][17] = str(dcomp)
+
+        fteam = 0
+        for opp in fqot[game][playerids[p2]]:
+            fteam += toi60[playerids[opp]]
+        data[i][18] = str(fteam)
+        
+        dteam = 0
+        for opp in dqot[game][playerids[p2]]:
+            dteam += toi60[playerids[opp]]
+        data[i][19] = str(dteam)
+
+    w = open(get_gamebygame_data_filename(season), 'w')
+    for i in range(len(data)):
+        w.write('\n{0:s}'.format(','.join(data[i])))
+    w.close()
+    
+    print('Done adding QoT and QoC to game-by-game')
+    
 
 def read_toi_rates(season, by_team=True):
     """Returns {team: {name: min off (in mins)}} if by_team=True
