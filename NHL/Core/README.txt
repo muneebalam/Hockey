@@ -14,3 +14,11 @@ python3 [name].py
 where [name] is the name of the file you just wrote and saved. 
 
 It will take a long time to run, but should give you all preseason, regular season, and playoff games from 2007 to the present in CSVs, both individual games and team logs (all a team's games in a single file).
+
+Credits:
+
+Ice rink, from @alexgoogs: https://github.com/war-on-ice/icerink
+
+Team colors, from http://teamcolors.arc90.com/ via @joewillage https://github.com/jwillage/Hockey/blob/master/Hockey/eventPlot.R
+
+
