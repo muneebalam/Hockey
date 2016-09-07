@@ -1,0 +1,565 @@
+/Library/Frameworks/Python.framework/Versions/3.4/bin/python3.4 /Users/muneebalam/Desktop/ipython/NHL/PbPMethods2.py
+fixing Tea Neu.  n/a Too many men-bench(2 min) Served By: #18 Bayda
+2007 20011 MIN CHI MIN21 Parrish
+2007 20011 MIN CHI MINStephane Veilleux
+2007 20011 MIN CHI MINMarian Gaborik
+2007 20011 MIN CHI MIN38 Demitra
+2007 20011 MIN CHI MINPetteri Nummelin
+2007 20011 MIN CHI MIN10 Gaborik
+2007 20011 MIN CHI MINEric Belanger
+2007 20011 MIN CHI MINDominic Moore
+2007 20011 MIN CHI MINMark Parrish
+2007 20011 MIN CHI MIN12 Rolston
+2007 20011 MIN CHI MINDerek Boogaard
+2007 20011 MIN CHI MINBrian Rolston
+2007 20011 MIN CHI MIN92 Radivojevic
+2007 20011 MIN CHI MINKeith Carney
+2007 20011 MIN CHI MINKim Johnsson
+2007 20011 MIN CHI MINBranko Radivojevic
+2007 20011 MIN CHI MIN33 Nummelin
+2007 20011 MIN CHI MINPavol Demitra
+2007 20011 MIN CHI MIN24 Boogaard
+2007 20011 MIN CHI MINBrent Burns
+2007 20011 MIN CHI MINMikko Koivu
+2007 20011 MIN CHI MIN19 Veilleux
+2007 20011 MIN CHI MIN9 Koivu
+2007 20011 MIN CHI MINPierre-Marc Bouchard
+2007 20011 MIN CHI MINWes Walz
+2007 20011 MIN CHI MINMartin Skoula
+2007 20011 MIN CHI MIN25 Belanger
+2007 20011 MIN CHI MINNick Schultz
+2007 20011 MIN CHI MIN18 Moore
+2007 20011 MIN CHI MIN96 Bouchard
+2007 20011 MIN CHI MINMartin Havlat
+2007 20011 MIN CHI MINDavid Koci
+2007 20011 MIN CHI MIN29 Williams
+2007 20011 MIN CHI MIN10 Sharp
+2007 20011 MIN CHI MINRene Bourque
+2007 20011 MIN CHI MINMagnus Johansson
+2007 20011 MIN CHI MINBrent Seabrook
+2007 20011 MIN CHI MINJason Williams
+2007 20011 MIN CHI MINRobert Lang
+2007 20011 MIN CHI MIN12 Bourque
+2007 20011 MIN CHI MIN5 Sopel
+2007 20011 MIN CHI MIN24 Havlat
+2007 20011 MIN CHI MIN43 Wisniewski
+2007 20011 MIN CHI MINPatrick Kane
+2007 20011 MIN CHI MINJames Vandermeer
+2007 20011 MIN CHI MINDuncan Keith
+2007 20011 MIN CHI MIN6 Johansson
+2007 20011 MIN CHI MINKevyn Adams
+2007 20011 MIN CHI MINYanic Perreault
+2007 20011 MIN CHI MINPatrick Sharp
+2007 20011 MIN CHI MIN37 Burish
+2007 20011 MIN CHI MIN94 Perreault
+2007 20011 MIN CHI MINJames Wisniewski
+2007 20011 MIN CHI MIN20 Lang
+2007 20011 MIN CHI MINSergei Samsonov
+2007 20011 MIN CHI MINAdam Burish
+2007 20011 MIN CHI MINBrent Sopel
+2007 20011 MIN CHI MINMartin Lapointe
+fixing Tea Neu.  n/a Too many men-bench(2 min) Served By: #13 Carcillo
+fixing Tea Neu.  n/a Too many men-bench(2 min) Served By: #20 Miettinen
+fixing Tea n/a  n/a Too many men-bench(2 min) Served By: #51 Globke
+Could not find penalty in T.B Off. # n/a ( min)
+For penalty see T.B #  ( min) Off. Zone
+fixing Tea n/a  n/a Too many men-bench(2 min) Served By: #51 Hamilton
+2007 20061 EDM VAN EDMRoberto Luongo
+2007 20109 T.B ATL T.BJohan Hedberg
+2007 20134 PIT TOR PITVesa Toskala
+2007 20143 DET S.J DETChris Osgood
+2007 20173 NYI T.B NYIRick DiPietro
+2007 20182 N.J TOR N.JMartin Brodeur
+2007 20185 DAL PHX DALMikael Tellqvist
+2007 20220 S.J DAL S.JMarty Turco
+2007 20255 CGY MIN CGYMiikka Kiprusoff
+cannot get attendance venue ['15239']
+ISSUE WITH 2007 20295 list index out of range ('list index out of range',)
+2007 20295 STL NSH STL57 Perron
+2007 20295 STL NSH STL12 Stempniak
+2007 20295 STL NSH STL5 Jackman
+2007 20295 STL NSH STL21 Mayers
+2007 20295 STL NSH STL22 Boyes
+2007 20295 STL NSH STL39 Weight
+2007 20295 STL NSH STL7 Tkachuk
+2007 20295 STL NSH STL20 Johnson
+2007 20295 STL NSH STL13 Hinote
+2007 20295 STL NSH STL18 Mcclement
+2007 20295 STL NSH STL19 King
+2007 20295 STL NSH STL71 Dumont
+2007 20295 STL NSH STL10 Erat
+2007 20295 STL NSH STL16 Hordichuk
+2007 20295 STL NSH STL3 Zidlicky
+2007 20295 STL NSH STL20 Suter
+2007 20295 STL NSH STL23 Gelinas
+2007 20295 STL NSH STL2 Hamhuis
+2007 20295 STL NSH STL47 Radulov
+2007 20295 STL NSH STL41 Ortmeyer
+2007 20295 STL NSH STL25 Smithson
+2007 20295 STL NSH STL7 De Vries
+2007 20301 NYI MTL NYICristobal Huet
+2007 20308 MIN VAN MINCurtis Sanford
+2007 20316 PHI WSH PHIMartin Biron
+2007 20327 NYI BOS NYIRick DiPietro
+problem with name: 
+2007 20354 CHI T.B CHINikolai Khabibulin
+2007 20373 TOR PIT TORDany Sabourin
+2007 20378 DET PHX DETChris Osgood
+2007 20399 FLA OTT FLACraig Anderson
+2007 20425 T.B NYI T.BRick DiPietro
+2007 20448 CAR OTT CARMartin Gerber
+2007 20474 DET FLA DETTomas Vokoun
+2007 20476 COL NSH COLPeter Budaj
+2007 20491 ATL T.B ATLKari Lehtonen
+2007 20506 FLA CAR FLATomas Vokoun
+2007 20509 VAN DAL VANRoberto Luongo
+2007 20537 NYI TOR NYIRick DiPietro
+2007 20596 NYI FLA NYIRick DiPietro
+2007 20661 CAR COL CARCam Ward
+2007 20669 MIN PHX MINJosh Harding
+problem with name: 
+2007 20710 NYI PHI NYIRick DiPietro
+2007 20770 CGY S.J CGYEvgeni Nabokov
+2007 20788 PHI ANA PHIMartin Biron
+2007 20863 ATL WSH ATLKari Lehtonen
+2007 20884 NYI ATL NYIRick DiPietro
+2007 20928 PHX COL PHXJose Theodore
+2007 21008 BUF WSH BUFOlaf Kolzig
+2007 21048 ATL COL ATLJose Theodore
+2007 21052 T.B NYI T.BRick DiPietro
+2007 21062 ANA VAN ANAJonas Hiller
+2007 21099 MTL STL MTLEmmanuel Legace
+2007 21121 ATL WSH ATLCristobal Huet
+2007 21162 N.J PHI N.JMartin Brodeur
+cannot get start end times ['6:09 EDT']
+see Start 6:09 EDT
+2007 21219 BOS BUF BOSTim Thomas
+No JSON for 2007 30111
+No JSON for 2007 30112
+No JSON for 2007 30113
+No JSON for 2007 30114
+No JSON for 2007 30115
+No JSON for 2007 30116
+No JSON for 2007 30117
+No JSON for 2007 30121
+No JSON for 2007 30122
+No JSON for 2007 30123
+No JSON for 2007 30124
+No JSON for 2007 30131
+No JSON for 2007 30132
+No JSON for 2007 30133
+No JSON for 2007 30134
+No JSON for 2007 30135
+No JSON for 2007 30136
+No JSON for 2007 30137
+2007 30137 WSH PHI WSHMartin Biron
+No JSON for 2007 30141
+No JSON for 2007 30142
+No JSON for 2007 30143
+No JSON for 2007 30144
+No JSON for 2007 30145
+No JSON for 2007 30151
+No JSON for 2007 30152
+No JSON for 2007 30153
+No JSON for 2007 30154
+No JSON for 2007 30155
+No JSON for 2007 30156
+No JSON for 2007 30161
+No JSON for 2007 30162
+No JSON for 2007 30163
+No JSON for 2007 30164
+No JSON for 2007 30165
+No JSON for 2007 30166
+No JSON for 2007 30167
+No JSON for 2007 30171
+No JSON for 2007 30172
+No JSON for 2007 30173
+No JSON for 2007 30174
+No JSON for 2007 30175
+No JSON for 2007 30176
+No JSON for 2007 30181
+No JSON for 2007 30182
+No JSON for 2007 30183
+No JSON for 2007 30184
+No JSON for 2007 30185
+No JSON for 2007 30186
+2007 30186 DAL ANA DALJean-sebastien Giguere
+No JSON for 2007 30211
+No JSON for 2007 30212
+No JSON for 2007 30213
+No JSON for 2007 30214
+No JSON for 2007 30215
+No JSON for 2007 30221
+No JSON for 2007 30222
+No JSON for 2007 30223
+No JSON for 2007 30224
+No JSON for 2007 30225
+No JSON for 2007 30231
+No JSON for 2007 30232
+No JSON for 2007 30233
+No JSON for 2007 30234
+No JSON for 2007 30241
+No JSON for 2007 30242
+No JSON for 2007 30243
+No JSON for 2007 30244
+No JSON for 2007 30245
+No JSON for 2007 30246
+No JSON for 2007 30311
+No JSON for 2007 30312
+No JSON for 2007 30313
+No JSON for 2007 30314
+No JSON for 2007 30315
+No JSON for 2007 30321
+No JSON for 2007 30322
+No JSON for 2007 30323
+No JSON for 2007 30324
+No JSON for 2007 30325
+2007 30325 DET DAL DETMarty Turco
+No JSON for 2007 30326
+No JSON for 2007 30411
+No JSON for 2007 30412
+No JSON for 2007 30413
+No JSON for 2007 30414
+No JSON for 2007 30415
+No JSON for 2007 30416
+Done generating game-by-game for 2007
+Could not get home/road for 2008 20247
+
+Could not get home/road for 2008 20247
+
+Could not get home/road for 2008 20247
+
+Could not get home/road for 2008 20247
+
+Could not get home/road for 2008 20247
+
+Could not get home/road for 2008 20247
+
+Parsed PBP file not found for 2008 20259
+Parsed PBP file not found for 2008 20259
+Parsed PBP file not found for 2008 20409
+Parsed PBP file not found for 2008 20409
+Parsed PBP file not found for 2008 21077
+Parsed PBP file not found for 2008 21077
+2008 20020 WSH CHI WSHJose Theodore
+2008 20046 CHI PHX CHINikolai Khabibulin
+2008 20100 N.J PHI N.JMartin Biron
+2008 20128 TOR T.B TORMike Smith
+2008 20148 CHI DAL CHITobias Stephan
+2008 20157 T.B OTT T.BMike Smith
+2008 20169 NYI CBJ NYIJoey MacDonald
+2008 20293 DAL ANA DALMarty Turco
+2008 20446 NYI WSH NYIBrent Johnson
+2008 20508 NYI TOR NYIRick DiPietro
+2008 20563 PHX NYI PHXRick DiPietro
+2008 20566 PIT FLA PITCraig Anderson
+2008 20629 DAL DET DALChris Osgood
+2008 20697 FLA DAL FLATomas Vokoun
+2008 20727 T.B PHI T.BAntero Niittymaki
+2008 20823 DAL VAN DALMarty Turco
+Could not find penalty in EDM n/a #18 MOREAU #29 OTT ( min)
+For penalty see EDM #18 MOREAU ( min) Drawn By: DAL #29 OTT
+problem with name: 
+2008 21068 CHI EDM CHIDwayne Roloson
+2008 21147 PIT N.J PITMarc-Andre Fleury
+problem with name: 
+2008 21191 NSH CHI NSHn/a
+ISSUE WITH 2008 21215 'Mitchell Fritz' ('Mitchell Fritz',)
+2008 30415 DET PIT DETChris Osgood
+Done generating game-by-game for 2008
+2009 20069 T.B FLA T.BAntero Niittymaki
+problem with name: 
+cannot get start end times ['3:57 EDT']
+see Start 3:57 EDT
+2009 20082 MTL COL MTLCraig Anderson
+2009 20093 BUF ATL BUFJohan Hedberg
+2009 20121 ATL WSH ATLSemyon Varlamov
+2009 20233 CBJ CAR CBJSteve Mason
+2009 20308 BUF BOS BUFTuukka Rask
+2009 20358 MIN COL MINCraig Anderson
+2009 20421 CBJ COL CBJPeter Budaj
+2009 20474 NSH DET NSHChris Osgood
+2009 20513 FLA CAR FLAManny Legace
+2009 20527 COL CBJ COLCraig Anderson
+2009 20618 STL CHI STLTy Conklin
+2009 20633 PIT ATL PITBrent Johnson
+2009 20640 NYR DAL NYRMarty Turco
+2009 20647 ATL NYR ATLChad Johnson
+2009 20684 ATL OTT ATLOndrej Pavelec
+2009 20696 MTL DAL MTLCarey Price
+2009 20717 PHX MIN PHXIlya Bryzgalov
+2009 20722 ANA CGY ANAJonas Hiller
+2009 20747 PHI NYR PHIRay Emery
+2009 20821 DAL PHX DALAlex Auld
+2009 20905 NYI T.B NYIMartin Biron
+2009 20932 DAL L.A DALJonathan Quick
+2009 21006 PHI CHI PHIMichael Leighton
+2009 21025 N.J BOS N.JMartin Brodeur
+2009 21093 DET STL DETJimmy Howard
+2009 21111 PIT PHI PITMarc-Andre Fleury
+2009 21128 BOS BUF BOSTuukka Rask
+2009 21156 L.A VAN L.AJonathan Bernier
+2009 21161 DAL EDM DALKari Lehtonen
+2009 21165 NYI OTT NYIBrian Elliott
+2009 21170 FLA NYR FLAHenrik Lundqvist
+2009 21175 PHI DET PHIBrian Boucher
+2009 21176 CHI CGY CHIAntti Niemi
+2009 30152 S.J COL S.JCraig Anderson
+Done generating game-by-game for 2009
+2010 20024 PHX BOS PHXTim Thomas
+2010 20097 VAN MIN VANCory Schneider
+2010 20125 MTL NYI MTLCarey Price
+2010 20163 EDM VAN EDMRoberto Luongo
+2010 20237 PHI FLA PHISergei Bobrovsky
+2010 20291 DAL COL DALKari Lehtonen
+2010 20320 EDM COL EDMMartin Gerber
+2010 20360 CBJ NSH CBJSteve Mason
+2010 20365 BOS T.B BOSTim Thomas
+2010 20457 NSH S.J NSHAnders Lindback
+2010 20470 FLA BUF FLAPatrick Lalime
+2010 20486 CHI L.A CHIJonathan Quick
+2010 20490 PHI FLA PHITomas Vokoun
+2010 20503 PIT FLA PITBrent Johnson
+2010 20563 ANA PHI ANAJonas Hiller
+2010 20566 PIT WSH PITMarc-Andre Fleury
+2010 20579 COL VAN COLRoberto Luongo
+2010 20588 COL BUF COLPeter Budaj
+2010 20635 NYR MTL NYRHenrik Lundqvist
+2010 20636 CAR CGY CARCam Ward
+2010 20643 T.B WSH T.BDwayne Roloson
+2010 20646 BOS PHI BOSTim Thomas
+2010 20688 T.B CBJ T.BMathieu Garon
+2010 20762 DAL VAN DALKari Lehtonen
+2010 20769 ANA S.J ANACurtis Mcelhinney
+2010 20903 OTT FLA OTTScott Clemmensen
+2010 20908 ANA L.A ANAJonathan Quick
+2010 20909 PHI NYI PHIAl Montoya
+Could not find penalty in CGY n/a #33 BABCHUK #50 VERMETTE PS-Thow object at puck(0 min)
+For penalty see CGY #33 BABCHUK PS-Thow object at puck(0 min) Drawn By: CBJ #50 VERMETTE
+2010 21024 TOR BUF TORJames Reimer
+2010 21050 CGY PHX CGYMiikka Kiprusoff
+2010 21061 DAL CHI DALKari Lehtonen
+2010 21083 MIN MTL MINAlex Auld
+ISSUE WITH 2010 21150 list index out of range ('list index out of range',)
+Could not find penalty in EDM Def. #85 REDDOX n/a PS-Thow object at puck(0 min)
+For penalty see EDM #85 REDDOX PS-Thow object at puck(0 min) Def. Zone
+2010 30126 BUF PHI BUFRyan Miller
+2010 30154 CHI VAN CHICorey Crawford
+2010 30186 NSH ANA NSHPekka Rinne
+Done generating game-by-game for 2010
+problem with name: 
+2011 20120 PHX DAL PHXKari Lehtonen
+2011 20166 N.J TOR N.JJonas Gustavsson
+2011 20191 MIN STL MINJaroslav Halak
+2011 20192 PHX EDM PHXMike Smith
+2011 20256 MTL CAR MTLCarey Price
+2011 20261 NYI MTL NYIRick DiPietro
+2011 20295 FLA N.J FLAMartin Brodeur
+2011 20319 PIT OTT PITMarc-Andre Fleury
+2011 20347 WSH STL WSHTomas Vokoun
+2011 20367 MIN N.J MINNiklas Backstrom
+2011 20389 OTT T.B OTTCraig Anderson
+2011 20397 WPG BOS WPGOndrej Pavelec
+2011 20422 BUF NYR BUFMartin Biron
+2011 20470 WPG ANA WPGDan Ellis
+2011 20501 NYR NYI NYRMartin Biron
+2011 20504 WPG MTL WPGOndrej Pavelec
+2011 20536 N.J BUF N.JMartin Brodeur
+Could not find penalty in FLA n/a #21 BARCH n/a ( min)
+For penalty see FLA #21 BARCH ( min)
+2011 20570 OTT N.J OTTCraig Anderson
+2011 20649 TOR NYR TORMartin Biron
+2011 20695 PIT MTL PITPeter Budaj
+2011 20713 PHI BOS PHIIlya Bryzgalov
+Could not find penalty in MTL Def. #30 BUDAJ #20 BROUWER PS-Thow object at puck(0 min)
+For penalty see MTL #30 BUDAJ PS-Thow object at puck(0 min) Def. Zone Drawn By: WSH #20 BROUWER
+2011 20816 BOS NSH BOSPekka Rinne
+2011 20822 TOR MTL TORCarey Price
+2011 20832 PIT T.B PITBrent Johnson
+2011 20880 DAL NSH DALPekka Rinne
+2011 20885 BUF NYI BUFKevin Poulin
+2011 20895 PHX L.A PHXMike Smith
+2011 20925 N.J T.B N.JMathieu Garon
+2011 20950 BOS N.J BOSTim Thomas
+2011 21068 MTL NYI MTLPeter Budaj
+2011 21073 VAN CBJ VANSteve Mason
+2011 21077 CHI WSH CHIMichal Neuvirth
+2011 21106 DAL VAN DALKari Lehtonen
+2011 21116 DAL CGY DALKari Lehtonen
+2011 21131 CHI NSH CHIPekka Rinne
+2011 21165 DET NSH DETPekka Rinne
+2011 21199 MTL T.B MTLPeter Budaj
+2011 21226 MIN PHX MINMike Smith
+2011 30134 N.J FLA N.JMartin Brodeur
+2011 30175 PHX CHI PHXMike Smith
+Done generating game-by-game for 2011
+2012 20010 NSH CBJ NSHPekka Rinne
+2012 20060 FLA PHI FLAIlya Bryzgalov
+2012 20094 N.J NYI N.JEvgeni Nabokov
+2012 20198 N.J PHI N.JMartin Brodeur
+2012 20231 NSH DET NSHJonas Gustavsson
+2012 20241 MTL NYI MTLEvgeni Nabokov
+2012 20360 CAR N.J CARDan Ellis
+2012 20389 N.J PHI N.JJohan Hedberg
+Could not find penalty in NSH Def. #74 KOSTITSYN #33 SEDIN PS-Holding stick on breakaway(0 min)
+For penalty see NSH #74 KOSTITSYN PS-Holding stick on breakaway(0 min) Def. Zone Drawn By: VAN #33 SEDIN
+2012 20424 DAL CGY DALKari Lehtonen
+2012 20425 COL CHI COLSemyon Varlamov
+2012 20455 ANA DET ANAJimmy Howard
+2012 20464 EDM STL EDMJaroslav Halak
+2012 20570 S.J DAL S.JAntti Niemi
+2012 20655 BUF NYR BUFHenrik Lundqvist
+2012 20709 OTT PHI OTTSteve Mason
+2012 30114 NYI PIT NYIMarc-Andre Fleury
+2012 30167 ANA DET ANAJonas Hiller
+2012 30246 S.J L.A S.JAntti Niemi
+Done generating game-by-game for 2012
+Could not find penalty in COL Neu. TEAM n/a Coach/Mgr on ice - bench(2 min) Served By: #58 Bordeleau
+For penalty see COL TEAM Coach/Mgr on ice - bench(2 min) Served By: #58 BORDELEAU Neu. Zone
+2013 20044 S.J NYR S.JAntti Niemi
+2013 20052 T.B FLA T.BBen Bishop
+2013 20075 CAR PHX CARMike Smith
+2013 20097 TOR CAR TORCam Ward
+2013 20106 DAL S.J DALAntti Niemi
+Value error in 2013 20108 Invalid control character at: line 1 column 25704 (char 25703) ('Invalid control character at: line 1 column 25704 (char 25703)',)
+Value error in 2013 20109 Invalid control character at: line 1 column 29732 (char 29731) ('Invalid control character at: line 1 column 29732 (char 29731)',)
+2013 20146 DAL CGY DALKari Lehtonen
+2013 20155 BOS N.J BOSTuukka Rask
+2013 20249 CAR MIN CARJustin Peters
+2013 20301 COL FLA COLTim Thomas
+2013 20377 S.J L.A S.JBen Scrivens
+2013 20412 WSH CAR WSHJustin Peters
+2013 20438 BOS PIT BOSTuukka Rask
+2013 20444 NYR N.J NYRMartin Brodeur
+2013 20519 DAL COL DALDan Ellis
+2013 20533 L.A S.J L.AMartin Jones
+2013 20599 N.J PIT N.JMartin Brodeur
+2013 20601 MIN STL MINBrian Elliott
+2013 20633 STL CBJ STLCurtis Mcelhinney
+2013 20647 BUF CAR BUFRyan Miller
+2013 20665 CGY STL CGYJaroslav Halak
+2013 20715 STL L.A STLJonathan Quick
+2013 20724 T.B S.J T.BBen Bishop
+2013 20735 VAN CGY VANKellan Lain
+Could not find penalty in MIN Def. #35 KUEMPER #24 BENN PS-Thow object at puck(0 min)
+For penalty see MIN #35 KUEMPER PS-Thow object at puck(0 min) Def. Zone Drawn By: DAL #24 BENN
+2013 20758 CGY PHX CGYKarri Ramo
+2013 20774 EDM PHX EDMMike Smith
+2013 20830 STL NSH STLBrian Elliott
+Value error in 2013 20855 Invalid control character at: line 1 column 28615 (char 28614) ('Invalid control character at: line 1 column 28615 (char 28614)',)
+2013 20865 MIN NSH MINCarter Hutton
+problem with name: 
+error with time ['1', 'GOAL', 'CBJ #8 HORTON(5),  Assists: #11 CALVERT(14); #21 WISNIEWSKI(43)', '', '', '2']
+2013 20987 COL CHI COLSemyon Varlamov
+2013 20988 CGY ANA CGYJoni Ortio
+2013 21093 N.J PHX N.JMartin Brodeur
+2013 21142 ANA EDM ANAFrederik Andersen
+2013 21173 PHI BUF PHISteve Mason
+problem with name: 
+Value error in 2013 21183 need more than 2 values to unpack ('need more than 2 values to unpack',)
+2013 21225 BUF NYI BUFConnor Knapp
+2013 30174 DAL ANA DALKari Lehtonen
+2013 30314 NYR MTL NYRHenrik Lundqvist
+Done generating game-by-game for 2013
+2014 20070 DAL PHI DALSteve Mason
+Could not find penalty in CAR Def. TEAM n/a Bench(2 min) Served By: #25 Terry
+For penalty see CAR TEAM Bench(2 min) Served By: #25 TERRY Def. Zone
+2014 20128 CBJ OTT CBJRobin Lehner
+2014 20236 T.B S.J T.BAntti Niemi
+2014 20242 PHI CBJ PHISteve Mason
+2014 20246 FLA NYI FLAJaroslav Halak
+2014 20303 DAL L.A DALKari Lehtonen
+2014 20357 NYR T.B NYRBen Bishop
+2014 20359 COL MTL COLCarey Price
+2014 20420 ANA EDM ANAFrederik Andersen
+2014 20462 CGY NYR CGYHenrik Lundqvist
+cannot get attendance venue ['17399']
+2014 20475 OTT ANA OTTIlya Bryzgalov
+2014 20512 DAL TOR DALJonathan Bernier
+2014 20537 CHI NSH CHIPekka Rinne
+Could not find penalty in COL Neu. TEAM n/a Bench(2 min) Served By: #12 Iginla
+For penalty see COL TEAM Bench(2 min) Served By: #12 IGINLA Neu. Zone
+2014 20584 N.J BUF N.JCory Schneider
+problem with name: 
+2014 20600 CAR BUF CARn/a
+2014 20638 DAL OTT DALAnders Lindback
+2014 20656 CBJ NYR CBJSergei Bobrovsky
+2014 20662 MTL NYI MTLDustin Tokarski
+2014 20669 MIN ARI MINDevan Dubnyk
+2014 20696 S.J L.A S.JAntti Niemi
+2014 20821 ARI S.J ARIAntti Niemi
+2014 20855 CGY MIN CGYDevan Dubnyk
+2014 20867 N.J VAN N.JCory Schneider
+Could not find penalty in CHI Def. #29 BICKELL #17 MACKENZIE PS-Thow object at puck(0 min)
+For penalty see CHI #29 BICKELL PS-Thow object at puck(0 min) Def. Zone Drawn By: FLA #17 MACKENZIE
+2014 20921 DAL COL DALKari Lehtonen
+problem with name: 
+Value error in 2014 20946 need more than 1 value to unpack ('need more than 1 value to unpack',)
+2014 20971 TOR STL TORBrian Elliott
+2014 21006 DET CBJ DETSergei Bobrovsky
+2014 21020 S.J CHI S.JCorey Crawford
+Could not find penalty in CAR Neu. TEAM n/a Bench(2 min) Served By: #16 Lindholm
+For penalty see CAR TEAM Bench(2 min) Served By: #16 LINDHOLM Neu. Zone
+2014 21031 CBJ CAR CBJSergei Bobrovsky
+2014 21059 DAL PIT DALMarc-Andre Fleury
+2014 21136 MTL T.B MTLBen Bishop
+Could not find penalty in DET Neu. TEAM n/a Bench(2 min) Served By: #15 Sheahan
+For penalty see DET TEAM Bench(2 min) Served By: #15 SHEAHAN Neu. Zone
+2014 30162 NSH CHI NSHPekka Rinne
+2014 30317 NYR T.B NYRBen Bishop
+Done generating game-by-game for 2014
+2015 20010 DAL PIT DALAntti Niemi
+2015 20071 NYI S.J NYIAlex Stalock
+Could not find penalty in NYI n/a TEAM n/a Bench(2 min) Served By: #91 Tavares
+For penalty see NYI TEAM Bench(2 min) Served By: #91 TAVARES
+2015 20157 TOR PIT TORMarc-Andre Fleury
+2015 20171 VAN PHI VANRyan Miller
+2015 20179 EDM PHI EDMMichal Neuvirth
+2015 20187 MTL NYI MTLJaroslav Halak
+2015 20254 CBJ ARI CBJSergei Bobrovsky
+2015 20282 MTL ARI MTLMike Smith
+2015 20312 TOR BOS TORTuukka Rask
+2015 20359 N.J COL N.JReto Berra
+2015 20394 PHI CBJ PHISergei Bobrovsky
+Could not find penalty in CHI Neu. TEAM n/a Bench(2 min) Served By: #86 Teravainen
+For penalty see CHI TEAM Bench(2 min) Served By: #86 TERAVAINEN Neu. Zone
+2015 20432 EDM NYR EDMHenrik Lundqvist
+Could not find penalty in DAL Off. #18 EAVES #27 PIETRANGELO Minor(2 min)
+For penalty see DAL #18 EAVES Minor(2 min) Off. Zone Drawn By: STL #27 PIETRANGELO
+No JSON for 2015 20453
+2015 20463 DAL CBJ DALKari Lehtonen
+2015 20476 ARI CBJ ARICurtis Mcelhinney
+2015 20546 STL NSH STLCarter Hutton
+2015 20582 ANA WPG ANAJohn Gibson
+2015 20587 VAN ARI VANLouis Domingue
+Could not find penalty in N.J Def. #22 TOOTOO #51 DESHARNAIS PS-Thow object at puck(0 min)
+For penalty see N.J #22 TOOTOO PS-Thow object at puck(0 min) Def. Zone Drawn By: MTL #51 DESHARNAIS
+2015 20650 WPG NSH WPGPekka Rinne
+Could not find penalty in CHI Neu. TEAM n/a Bench(2 min) Served By: #14 Panik
+For penalty see CHI TEAM Bench(2 min) Served By: #14 PANIK Neu. Zone
+2015 20780 OTT TOR OTTCraig Anderson
+2015 20804 COL VAN COLJacob Markstrom
+Could not find penalty in CGY Neu. TEAM n/a Bench(2 min) Served By: #93 Bennett
+For penalty see CGY TEAM Bench(2 min) Served By: #93 BENNETT Neu. Zone
+2015 20822 T.B NSH T.BBen Bishop
+Could not find penalty in WPG Neu. TEAM n/a Bench(2 min) Served By: #27 Ehlers
+For penalty see WPG TEAM Bench(2 min) Served By: #27 EHLERS Neu. Zone
+2015 20919 ANA EDM ANACam Talbot
+Could not find penalty in TOR Neu. TEAM n/a Bench(2 min) Served By: #43 Kadri
+For penalty see TOR TEAM Bench(2 min) Served By: #43 KADRI Neu. Zone
+2015 20993 BUF NYR BUFChad Johnson
+2015 21013 CBJ PIT CBJSergei Bobrovsky
+Could not find penalty in OTT n/a TEAM n/a Bench(2 min) Served By: #43 Dzingel
+For penalty see OTT TEAM Bench(2 min) Served By: #43 DZINGEL
+2015 21062 WSH NSH WSHBraden Holtby
+2015 21184 CBJ NYR CBJHenrik Lundqvist
+Could not find penalty in DET Off. #8 ABDELKADER #46 BLUNDEN Major(5 min)
+For penalty see DET #8 ABDELKADER Major(5 min) Off. Zone Drawn By: T.B #46 BLUNDEN
+cannot get start end times ['7:10 EDT']
+see Start 7:10 EDT
+cannot get start end times ['12:00 CDT']
+see Start 12:00 CDT
+2015 30246 NSH S.J NSHPekka Rinne
+Done generating game-by-game for 2015
+
+Process finished with exit code 0
