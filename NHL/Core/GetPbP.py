@@ -63,6 +63,23 @@ MASCOT_NAMES = {'ATLANTA THRASHERS': 'Thrashers', 'ATL': 'Thrashers',
                 'ATLANTIC': 'Team Atlantic', 'METROPOLITAN': 'Team Metropolitan',
                 'CENTRAL': 'Team Central', 'PACIFIC': 'Team Pacific'}
 TEAMS = {abbrev for abbrev in TEAM_MAP.values()}
+TEAM_COLOR_DCT = {'ANA': ['black', 'orange'], 'L.A': ['black', 'white'],
+                  'S.J': ['teal', 'teal'], 'PHX': ['saddlebrown', 'antiquewhite'],
+                  'ARI': ['saddlebrown', 'antiquewhite'], 'DAL': ['limegreen', 'silver'],
+                  'CHI': ['red', 'black'], 'DET': ['red', 'linen'],
+                  'NSH': ['y', 'darkblue'], 'STL': ['blue', 'midnightblue'],
+                  'CBJ': ['darkblue', 'lightblue'], 'EDM': ['orange', 'blue'],
+                  'CGY': ['black', 'red'], 'VAN': ['darkblue', 'green'],
+                  'MIN': ['forestgreen', 'red'], 'COL': ['darkblue', 'maroon'],
+                  'BOS': ['y', 'black'], 'MTL': ['blue', 'r'],
+                  'BUF': ['navy', 'gold'], 'TOR': ['blue', 'white'],
+                  'OTT': ['red', 'gold'],
+                  'PHI': ['orange', 'black'], 'PIT': ['black', 'goldenrod'],
+                  'N.J': ['r', 'green'], 'NYR': ['blue', 'red'],
+                  'NYI': ['darkorange', 'blue'],
+                  'FLA': ['navy', 'firebrick'], 'WSH': ['red', 'blue'],
+                  'T.B': ['black', 'blue'], 'CAR': ['black', 'firebrick'],
+                  'ATL': ['firebrick', 'cornflowerblue'], 'WPG': ['darkblue', 'silver']}
 DAYS = {'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'}
 DAYS_SHORT = {day[:3] for day in DAYS}
 EVENT_TYPES = {'PSTR': 'Period start', 'PEND': 'Period end', 'GEND': 'Game end', 'FAC': 'Faceoff', 'HIT': 'Hit',
