@@ -80,6 +80,21 @@ TEAM_COLOR_DCT = {'ANA': ['black', 'orange'], 'L.A': ['black', 'white'],
                   'FLA': ['navy', 'firebrick'], 'WSH': ['red', 'blue'],
                   'T.B': ['black', 'blue'], 'CAR': ['black', 'firebrick'],
                   'ATL': ['firebrick', 'cornflowerblue'], 'WPG': ['darkblue', 'silver']}
+TEAM_COLOR_DCT2 = {'ANA': ["#91764B", '#000000', '#EF5225'], 'ARI': ['#841F27', '#000000', '#EFE1C6'], 
+                   'PHX': ['#841F27', '#EFE1C6', '#EFE1C6'], 'ATL': ['#', '#'], 'BOS': ['#FFC422', '#000000'],
+                   'BUF': ['002E62', '#FDBB2F', '#AEB6B9'], 'CGY': ['#E03A3E', '#FFC758', '#000000'], 
+                   'CAR': ['#8E8E90', '#E03A3E', '#8E8E90'], 'CHI': ['#E3263A', '#000000'], 
+                   'COL': ['#8B2942', '#01548A', '#000000', '#A9B0B8'], 
+                   'CBJ': ['#00285C', '#E03A3E', '#A9B0B8'], 'DAL': ['#006A4E', '#000000', '#C0C0C0'], 
+                   'DET': ['#EC1F26', '#FFFFFF'], 'EDM': ['#E66A20', '#003777'],
+                   'FLA': ['#C8213F', '#002E5F', '#D59C05'], 'L.A': ['#AFB7BA', '#000000'], 
+                   'MIN': ['#025736', '#BF2B37', '#EFB410', '#EEE3C7'],
+                   'MTL': ['#213770', '#BF2F38'], 'NSH': ['#FDBB2F', '#002E62'], 'N.J': ['#E03A3E', '#000000'],
+                   'NYI': ['#F57D31', '#00529B'], 'NYR': ['#0161AB', '#E6393F'], 'OTT': ['#E4173E', '#000000', '#D69F0F'],
+                   'PHI': ['#F47940', '#000000'], 'PIT': ['#CCCC99', '#000000', '#FFCC33'], 
+                   'S.J': ['#05535D', '#F38F20', '#000000'], 'STL': ['#0546A0', '#FFC325', '#101F48'], 
+                   'T.B': ['#013E7D', '#000000', '#C0C0C0'], 'TOR': ['#003777', '#FFFFFF'], 'VAN': ['#07346F', '#047A4A', '#A8A9AD'], 
+                   'WSH': ['#CF132B', '#00214E', '#000000'], 'WPG': ['#002E62', '#0168AB', '#A8A9AD']}    
 DAYS = {'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'}
 DAYS_SHORT = {day[:3] for day in DAYS}
 EVENT_TYPES = {'PSTR': 'Period start', 'PEND': 'Period end', 'GEND': 'Game end', 'FAC': 'Faceoff', 'HIT': 'Hit',
