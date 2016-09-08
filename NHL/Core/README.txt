@@ -1,4 +1,6 @@
-Start by saving all three .py files in the same folder. Change the relevant fields near the top of GetPbP, PbPMethods2, and ChartMethods (including MAX_SEASON).
+FYI: This does violate the NHL's terms of service https://www.nhl.com/info/terms-of-service
+
+If you want to proceed, start by saving all three .py files in the same folder. Change the relevant fields near the top of GetPbP, PbPMethods2, and ChartMethods (including MAX_SEASON).
 
 Open up a text file in the same folder as GetPbP and write the following code.
 
