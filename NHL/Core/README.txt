@@ -13,7 +13,7 @@ python3 [name].py
 
 where [name] is the name of the file you just wrote and saved. 
 
-It will take a long time to run, but should give you all preseason, regular season, and playoff games from 2007 to the present in CSVs, both individual games and team logs (all a team's games in a single file).
+It will take a long time to run (and make sure you have at least 25 GB of free disk space), but should give you all preseason, regular season, and playoff games from 2007 to the present in CSVs, both individual games and team logs (all a team's games in a single file).
 
 Credits:
 
