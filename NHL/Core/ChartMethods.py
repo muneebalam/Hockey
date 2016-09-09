@@ -1,5 +1,6 @@
 import PbPMethods2 as pm2
 import GetPbP
+import matplotlib.pyplot as plt
 
 def size_function(x):
     """Helper method for usage_chart. Returns area of bubble corresponding to this toi/60"""
@@ -170,8 +171,6 @@ def usage_chart(season, team, pos=['F', 'D'], startgame=20001, endgame=21230, mi
     else:
         colors = [cfrel60[p] for p in plist]
 
-    import matplotlib.pyplot as plt
-
     plt.clf()
 
     if sig == 'me':
@@ -305,8 +304,7 @@ def h2h_charts(season, games, save_folder=None, strengths=['5v5'], bigchart=True
 
 def general_h2h_chart(h2htoi, h2hcorsi, hcorsi, rcorsi, htotalstoi, rtotalstoi, brangex, brangey, hname,
                       hnameorder, hnumbers, rname, rnameorder, rnumbers, num_fs, save_title, save_file=None,
-                      bigchart=False):
-    import matplotlib.pyplot as plt
+                      bigchart=False, showgraph=True):
 
     toiy = []
     toix = []
@@ -421,12 +419,15 @@ def general_h2h_chart(h2htoi, h2hcorsi, hcorsi, rcorsi, htotalstoi, rtotalstoi, 
     plt.title(save_title, y=1.2)
     plt.tight_layout()
     if save_file is None:
-        plt.show()
+        if showgraph:
+            plt.show()
+        else:
+            pass #for jupyter %matplotlib inline
     else:
         plt.savefig(save_file)
     plt.clf()
 
-def plot_pp_units(team, seasons, strength=['5v4'], save_file=None):
+def plot_pp_units(team, seasons, strength=['5v4'], save_file=None, showgraph=True):
 
     if not isinstance(seasons, list):
         seasons = [seasons]
@@ -462,7 +463,6 @@ def plot_pp_units(team, seasons, strength=['5v4'], save_file=None):
         topfourlst.append(maxunit)
 
     #find each player's shot center for the top unit
-    import matplotlib.pyplot as plt
     fig_size = plt.rcParams["figure.figsize"]
     fig_size[0] = 12
     fig_size[1] = 6
@@ -525,15 +525,16 @@ def plot_pp_units(team, seasons, strength=['5v4'], save_file=None):
     plt.axis('off')
     plt.gcf().tight_layout()
     if save_file is None:
-        plt.show()
+        if showgraph:
+            plt.show()
+        else:
+            pass #for jupyter %matplotlib inline
     else:
         plt.savefig(save_file)
     plt.clf()
 
 def rink_background(which='hfull'):
     """Choose from hfull (horiz-full), vfull, right, left, up, or down"""
-
-    import matplotlib.pyplot as plt
 
     if which=='hfull':
         img = plt.imread(pm2.get_full_rink_filename())
@@ -559,8 +560,6 @@ def rink_background(which='hfull'):
 
 def plot_game_shots(season, game):
     """Plots 5v5 shots from given game on rink"""
-
-    import matplotlib.pyplot as plt
 
     rink_background()
 
@@ -606,7 +605,6 @@ def plot_team_shots(team, seasons, strengths=['5v5'], players_on=None, show_cent
     if players_off is not None and not isinstance(players_off, list):
         players_off = [players_off]
 
-    import matplotlib.pyplot as plt
     from operator import itemgetter
 
     fig_size = plt.rcParams["figure.figsize"]
@@ -855,13 +853,13 @@ def rolling_penalty_breakdown(player, team, startseason, endseason=None, roll_le
             penl = pm2.get_penalty_type(line)
             if pm2.get_acting_team(line) == team:
                 if player is None or player is [] or pm2.get_acting_player(line) == player:
-                    if penl in OBS_NAMES:
+                    if penl in GetPbP.OBS_NAMES:
                         obs_t[-1] += 1
-                    elif penl in DISC_NAMES:
+                    elif penl in GetPbP.DISC_NAMES:
                         disc_t[-1] += 1
-                    elif penl in AGG_NAMES:
+                    elif penl in GetPbP.AGG_NAMES:
                         agg_t[-1] += 1
-                    elif penl in OTHER_NAMES:
+                    elif penl in GetPbP.OTHER_NAMES:
                         other_t[-1] += 1
                     elif penl not in exclude:
                         print('Penalty not found: {0:s}'.format(penl))
@@ -871,14 +869,14 @@ def rolling_penalty_breakdown(player, team, startseason, endseason=None, roll_le
                     total_pen_taken_dct[penl] += 1
                     tsum += 1
             else:
-                if player is None or player is [] or receiving_player(line) == player:
-                    if penl in OBS_NAMES:
+                if player is None or player is [] or pm2.get_event_recipient(line) == player:
+                    if penl in GetPbP.OBS_NAMES:
                         obs_d[-1] += 1
-                    elif penl in DISC_NAMES:
+                    elif penl in GetPbP.DISC_NAMES:
                         disc_d[-1] += 1
-                    elif penl in AGG_NAMES:
+                    elif penl in GetPbP.AGG_NAMES:
                         agg_d[-1] += 1
-                    elif penl in OTHER_NAMES:
+                    elif penl in GetPbP.OTHER_NAMES:
                         other_d[-1] += 1
                     elif penl not in exclude:
                         print('Penalty not found: {0:s}'.format(penl))
@@ -915,13 +913,11 @@ def rolling_penalty_breakdown(player, team, startseason, endseason=None, roll_le
         other_t_roll.append(sum(other_t[start:end]))
         other_d_roll.append(sum(other_d[start:end]))
 
-    import matplotlib.pyplot as plt
-
     # drawn
     if player is None or player == []:
-        plt.title('{0:s} penalties drawn'.format(mascot_name(team)))
+        plt.title('{0:s} penalties drawn'.format(GetPbP.mascot_name(team)))
     else:
-        plt.title('{0:s} {1:d} penalties drawn'.format(mascot_name(team), player))
+        plt.title('{0:s} {1:d} penalties drawn'.format(GetPbP.mascot_name(team), player))
     plt.xlabel(
         'End of team {2:d}-game rolling segment ({0:d}-{1:s})'.format(startseason, str(endseason + 1)[2:], roll_len))
     plt.grid(b=True, which='major', axis='y', linestyle='-')
@@ -939,9 +935,9 @@ def rolling_penalty_breakdown(player, team, startseason, endseason=None, roll_le
     #taken
     plt.clf()
     if player is None or player == []:
-        plt.title('{0:s} penalties taken'.format(mascot_name(team)))
+        plt.title('{0:s} penalties taken'.format(GetPbP.mascot_name(team)))
     else:
-        plt.title('{0:s} {1:d} penalties taken'.format(mascot_name(team), player))
+        plt.title('{0:s} {1:d} penalties taken'.format(GetPbP.mascot_name(team), player))
     plt.xlabel(
         'End of team {2:d}-game rolling segment ({0:d}-{1:s})'.format(startseason, str(endseason + 1)[2:], roll_len))
     plt.grid(b=True, which='major', axis='y', linestyle='-')
@@ -956,3 +952,180 @@ def rolling_penalty_breakdown(player, team, startseason, endseason=None, roll_le
     plt.xlim(0, len(games))
     plt.show()
     plt.clf()
+
+def game_corsi_graph(season, game, save_folder=None, bigchart=True):
+    """In the vein of hockeystats.ca"""
+
+    import matplotlib.patheffects as path_effects
+
+    r = open(GetPbP.get_parsed_pbp_filename(season, game))
+    line = r.readline()
+    rname, hname = line[line.index(':') + 1:].strip().split('@')
+    r.close()
+
+    time_in_game = []
+    team1 = rname.title()
+    team2 = hname.title()
+    team1name = GetPbP.TEAM_MAP[rname]
+    team2name = GetPbP.TEAM_MAP[hname]
+    team1cf = {}
+    team2cf = {}
+
+    team1goals = [] #for markers
+    team2goals = []
+
+    for line in pm2.read_game_corsi(season, game, strengths=['all']):
+        act = pm2.get_acting_team(line)
+        goal = pm2.get_event_type(line) == 'GOAL'
+
+        if team1name is None:
+            team1name = act
+        elif team2name is None and not act == team1name:
+            team2name = act
+
+        time_in_game.append(pm2.convert_time(pm2.get_event_time(line), pm2.get_event_period(line)))
+        if act == team1name:
+            if goal:
+                team1goals.append(time_in_game[-1])
+            if time_in_game[-1] in team1cf:
+                team1cf[time_in_game[-1]] += 1
+            else:
+                team1cf[time_in_game[-1]] = 1
+        else:
+            if goal:
+                team2goals.append(time_in_game[-1])
+            if time_in_game[-1] in team2cf:
+                team2cf[time_in_game[-1]] += 1
+            else:
+                team2cf[time_in_game[-1]] = 1
+
+    toi = [i+1 for i in range(time_in_game[-1] + 1)]
+    cf = [0 for i in range(time_in_game[-1] + 1)]
+    ca = [0 for i in range(time_in_game[-1] + 1)]
+
+    time_i = 0
+    for i in range(1, len(toi)):
+        cf[i] = cf[i-1]
+        ca[i] = ca[i-1]
+        if i in team1cf:
+            cf[i] += 1
+        if i in team2cf:
+            ca[i] += 1
+
+    toadd = 0
+    while len(toi) < 3600:
+        toadd += 1
+        toi.append(toi[-1] + 1)
+    cf += [cf[-1]]*toadd
+    ca += [ca[-1]]*toadd
+
+    team1pptimes = set()
+    team2pptimes = set()
+
+    prev_st = '5v5'
+    strength_change_times = set()
+    for line in pm2.read_game_toi(season, game, strengths=['all']):
+        st = pm2.get_event_strength(line)
+        time = int(line[0])
+        if not st == prev_st:
+            strength_change_times.add(time)
+        if int(st[0]) > int(st[st.index('v') + 1]):
+            team2pptimes.add(time)
+        elif int(st[0]) < int(st[st.index('v') + 1]):
+            team1pptimes.add(time)
+        else:
+            pass
+        prev_st = st
+
+    if bigchart:
+        fig = plt.figure(figsize=[10.5, 7])
+
+    team1colors = GetPbP.get_team_colors(team1name)
+    team2colors = GetPbP.get_team_colors(team2name)
+
+    ppstart = None
+    original = False
+
+    team1pptimes = list(team1pptimes)
+    team1pptimes.sort()
+
+    for i in range(len(team1pptimes)):
+        time = team1pptimes[i]
+        if i == 0 or not team1pptimes[i-1] == time-1:
+            ppstart = time
+        else:
+            pass
+        if i == len(team1pptimes) - 1 or team1pptimes[i + 1] == time + 1:
+            if not original:
+                plt.gca().axvspan(ppstart, time, alpha=0.5, color=team1colors[0], label='PP-'+team1name)
+                original = True
+            else:
+                plt.gca().axvspan(ppstart, time, alpha=0.5, color=team1colors[0])
+            ppstart = None
+        else:
+            pass
+
+    ppstart = None
+    original = False
+
+    team2pptimes = list(team2pptimes)
+    team2pptimes.sort()
+
+    for i in range(len(team2pptimes)):
+        time = team2pptimes[i]
+        if i == 0 or not team2pptimes[i-1] == time-1:
+            ppstart = time
+        else:
+            pass
+        if i == len(team2pptimes) - 1 or team2pptimes[i + 1] == time + 1:
+            if not original:
+                plt.gca().axvspan(ppstart, time, alpha=0.5, color=team2colors[0], label='PP-'+team1name)
+                original = True
+            else:
+                plt.gca().axvspan(ppstart, time, alpha=0.5, color=team2colors[0])
+            ppstart = None
+        else:
+            pass
+
+    team1line = plt.plot(toi, cf, color=team1colors[1], label=team1, lw=2, zorder=1)
+    team1line[0].set_path_effects([path_effects.Stroke(linewidth=5, foreground=team1colors[0]),
+                           path_effects.Normal()])
+
+    team2line = plt.plot(toi, ca, color=team2colors[1], label=team2, lw=2, zorder=1)
+    team2line[0].set_path_effects([path_effects.Stroke(linewidth=5, foreground=team2colors[0]),
+                           path_effects.Normal()])
+
+    gf1is = [cf[team1goals[i]] for i in range(len(team1goals))]
+    gf2is = [ca[team2goals[i]] for i in range(len(team2goals))]
+    plt.scatter(team1goals, gf1is, marker='D', color=team1colors[0], s=100, label='{0:s} goal'.format(team1name),
+                edgecolors='k', zorder=2)
+    plt.scatter(team2goals, gf2is, marker='D', color=team2colors[0], s=100, label='{0:s} goal'.format(team2name),
+                edgecolors='k', zorder=2)
+
+    plt.legend(loc=2, scatterpoints=1, fontsize=11)
+
+    bot, top = plt.ylim()
+    periods = 1
+    while 1200 * periods < len(toi) - 1:
+        plt.plot([1200 * periods, 1200 * periods], [0, top], lw=3, color='k', ls='-')
+        periods += 1
+
+    if len(toi) > 3600:
+        plt.xlim(0, len(toi))
+    else:
+        plt.xlim(0, 3600)
+
+    plt.ylim(0, top)
+    plt.xlabel('Time in game')
+    xlabs = '0,1st period,20:00,2nd period,40:00,3rd period,60:00'.split(',')
+    plt.xticks([i for i in range(0, 3601, 600)], xlabs)
+    plt.ylabel('CF (all situations)')
+    plt.title('{0:s} {2:d} at {1:s} {3:d}'.format(team1, team2,
+                                                                len(team1goals), len(team2goals)), size=16)
+    if len(toi) > 3600:
+        plt.annotate('OT', xy=(3600 + (len(toi)-3600)/2, 0), va='bottom', ha='center')
+
+    if save_folder is not None:
+        plt.savefig(save_folder + '{0:s} at {1:s} timeline.png'.format(team1name, team2name))
+    else:
+        plt.show()
