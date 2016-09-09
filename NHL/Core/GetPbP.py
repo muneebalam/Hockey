@@ -22,7 +22,9 @@ TEAM_MAP = {'ATLANTA THRASHERS': 'ATL', 'WASHINGTON CAPITALS': 'WSH', 'CAROLINA 
             'LOS ANGELES KINGS': 'L.A', 'ANAHEIM DUCKS': 'ANA', 'DALLAS STARS': 'DAL',
             'PHOENIX COYOTES': 'PHX', 'ARIZONA COYOTES': 'ARI', 'EASTERN': 'EAS', 'WESTERN': 'WES',
             'TEAM LIDSTROM': 'ASB', 'TEAM STAAL': 'ASR', 'TEAM CHARA': 'BLU', 'TEAM ALFREDSSON': 'RED',
-            'ATLANTIC': 'ATL', 'METROPOLITAN': 'MET', 'PACIFIC': 'PAC', 'CENTRAL': 'CEN'}
+            'ATLANTIC': 'ATL', 'METROPOLITAN': 'MET', 'PACIFIC': 'PAC', 'CENTRAL': 'CEN',
+            'TEAM SWEDEN': 'SWE', 'TEAM FINLAND': 'FIN', 'TEAM RUSSIA': 'RUS', 'TEAM CZECH REPUBLIC': 'CZE',
+            'TEAM EUROPE': 'EUR', 'TEAM NORTH AMERICA': 'NAT', 'TEAM CANADA': 'CAN', 'TEAM USA': 'USA'}
 MASCOT_NAMES = {'ATLANTA THRASHERS': 'Thrashers', 'ATL': 'Thrashers',
                 'WASHINGTON CAPITALS': 'Capitals', 'WSH': 'Capitals',
                 'CAROLINA HURRICANES': 'Hurricanes', 'CAR': 'Hurricanes',
@@ -61,7 +63,11 @@ MASCOT_NAMES = {'ATLANTA THRASHERS': 'Thrashers', 'ATL': 'Thrashers',
                 'TEAM STAAL': 'Team Staal', 'ASR': 'Team Staal',
                 'TEAM CHARA': 'Team Chara', 'BLU': 'Team Chara',
                 'ATLANTIC': 'Team Atlantic', 'METROPOLITAN': 'Team Metropolitan',
-                'CENTRAL': 'Team Central', 'PACIFIC': 'Team Pacific'}
+                'CENTRAL': 'Team Central', 'PACIFIC': 'Team Pacific',
+                'TEAM SWEDEN': 'Team Sweden', 'TEAM FINLAND': 'Team Finland',
+                'TEAM RUSSIA': 'Team Russia', 'TEAM CZECH REPUBLIC': 'Team Czech Republic',
+                'TEAM EUROPE': 'Team Europe', 'TEAM NORTH AMERICA': 'Team North America',
+                'TEAM CANADA': 'Team Canada', 'TEAM USA': 'Team USA'}
 TEAMS = {abbrev for abbrev in TEAM_MAP.values()}
 TEAM_COLOR_DCT = {'ANA': ['black', 'orange'], 'L.A': ['black', 'white'],
                   'S.J': ['teal', 'teal'], 'PHX': ['saddlebrown', 'antiquewhite'],
@@ -79,9 +85,17 @@ TEAM_COLOR_DCT = {'ANA': ['black', 'orange'], 'L.A': ['black', 'white'],
                   'NYI': ['darkorange', 'blue'],
                   'FLA': ['navy', 'firebrick'], 'WSH': ['red', 'blue'],
                   'T.B': ['black', 'blue'], 'CAR': ['black', 'firebrick'],
-                  'ATL': ['firebrick', 'cornflowerblue'], 'WPG': ['darkblue', 'silver']}
+                  'ATL': ['firebrick', 'cornflowerblue'], 'WPG': ['darkblue', 'silver'],
+                  'CZE': ['blue', 'white'],
+                  'RUS': ['red', 'goldenrod'],
+                  'USA': ['b', 'r'],
+                  'CAN': ['r', 'white'],
+                  'NAT': ['darkgrey', 'orange'],
+                  'EUR': ['darkblue', 'c'],
+                  'FIN': ['steelblue', 'white'],
+                  'SWE': ['goldenrod', 'b']}
 TEAM_COLOR_DCT2 = {'ANA': ["#91764B", '#000000', '#EF5225'], 'ARI': ['#841F27', '#000000', '#EFE1C6'], 
-                   'PHX': ['#841F27', '#EFE1C6', '#EFE1C6'], 'ATL': ['#', '#'], 'BOS': ['#FFC422', '#000000'],
+                   'PHX': ['#841F27', '#000000', '#EFE1C6'], 'ATL': ['#4B82C3', '#CE7318'], 'BOS': ['#FFC422', '#000000'],
                    'BUF': ['002E62', '#FDBB2F', '#AEB6B9'], 'CGY': ['#E03A3E', '#FFC758', '#000000'], 
                    'CAR': ['#8E8E90', '#E03A3E', '#8E8E90'], 'CHI': ['#E3263A', '#000000'], 
                    'COL': ['#8B2942', '#01548A', '#000000', '#A9B0B8'], 
@@ -94,7 +108,7 @@ TEAM_COLOR_DCT2 = {'ANA': ["#91764B", '#000000', '#EF5225'], 'ARI': ['#841F27', 
                    'PHI': ['#F47940', '#000000'], 'PIT': ['#CCCC99', '#000000', '#FFCC33'], 
                    'S.J': ['#05535D', '#F38F20', '#000000'], 'STL': ['#0546A0', '#FFC325', '#101F48'], 
                    'T.B': ['#013E7D', '#000000', '#C0C0C0'], 'TOR': ['#003777', '#FFFFFF'], 'VAN': ['#07346F', '#047A4A', '#A8A9AD'], 
-                   'WSH': ['#CF132B', '#00214E', '#000000'], 'WPG': ['#002E62', '#0168AB', '#A8A9AD']}    
+                   'WSH': ['#CF132B', '#00214E', '#000000'], 'WPG': ['#002E62', '#0168AB', '#A8A9AD']}  
 DAYS = {'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'}
 DAYS_SHORT = {day[:3] for day in DAYS}
 EVENT_TYPES = {'PSTR': 'Period start', 'PEND': 'Period end', 'GEND': 'Game end', 'FAC': 'Faceoff', 'HIT': 'Hit',
@@ -936,8 +950,8 @@ def read_events(gamedata, xy, hname, rname):
             except ValueError: #sometimes time listed as 21:0-1 in shootouts
                 if period == 5:
                     time = '0:00'
-                elif period == 4 and time == '-16:0-1 20:00':
-                    time = '0:00'
+                elif period == 4 and rel_data[3] == '-16:0-1 20:00':
+                    time = '5:00'
                 else:
                     print('error with time', rel_data)
             team, zone, actor, recip, note = get_team_zone_player_recipient_note(gamedata[event_is[i]:event_is[i] + 2], hname, rname)
@@ -1698,6 +1712,7 @@ def save_toimatrix(season, game, force_overwrite=False):
 
             w.write('\n{0:d},{1:s},{2:s},{3:s},{4:s}'.format(i, current_score, fixedstrength, ';'.join(matrix[i][0]),
                                                              ';'.join(matrix[i][1])))
+        w.close()
 
 
 def strip_out_html(lines):
@@ -1763,7 +1778,8 @@ def strip_out_html(lines):
 
 def get_teamlist(season):
     """Gets list of teams in a season"""
-    exclude_teams = {'EAS', 'WES', 'ASB', 'ASR', 'BLU', 'RED', 'CEN', 'MET', 'PAC', 'ATL'}
+    exclude_teams = {'EAS', 'WES', 'ASB', 'ASR', 'BLU', 'RED', 'CEN', 'MET', 'PAC', 'ATL',
+                     'EUR', 'NAT', 'RUS', 'CAN', 'USA', 'FIN', 'SWE', 'CZE'}
     if season >= 2014:
         exclude_teams.add('PHX')
     else:
@@ -1977,9 +1993,10 @@ def get_season_gamelist(season):
 def get_mascot_name(team):
     """Get team mascot name"""
     return MASCOT_NAMES[team.upper()]
+    
 
 def get_team_colors(team):
     """Gets suggested colors from TEAM_COLOR_DCT and TEAM_COLOR_DCT2"""
-    if team in {'STL', 'EDM', 'CGY', 'MTL'}:
+    if team in {'STL', 'EDM', 'CGY', 'MTL'} or team not in TEAM_COLOR_DCT2:
         return TEAM_COLOR_DCT[team]
     return TEAM_COLOR_DCT2[team]
