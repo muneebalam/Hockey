@@ -438,6 +438,8 @@ def read_team_toi(team, season, strengths=['5v5'], states=['all']):
 def get_home_player_numbers(season, games, switch=None):
     """Get home player numbers from this game using TOI log"""
     dct = {}
+    if isinstance(games, int):
+        games = {games}
     for game in games:
         if switch is None or not switch[game]:
             for p, num in get_player_numbers(GetPbP.get_parsed_toih_filename(season, game)).items():
@@ -451,6 +453,8 @@ def get_home_player_numbers(season, games, switch=None):
 def get_road_player_numbers(season, games, switch=None):
     """Get road playernumbers from this game using TOI log"""
     dct = {}
+    if isinstance(games, int):
+        games = {games}
     for game in games:
         if switch is None or not switch[game]:
             for p, num in get_player_numbers(GetPbP.get_parsed_toiv_filename(season, game)).items():
@@ -493,7 +497,7 @@ def h2h_chart_data(season, games, strengths=['5v5']):
         if len(rnames) == 1:
             switch[game] = False
         else:
-            if rname == rnames[0]:
+            if rname == rnames[0] or hname == hnames[0]:
                 switch[game] = False
             else:
                 switch[game] = True
@@ -1577,3 +1581,6 @@ def match_name(p_org, num_name_dict):
             return p
         else:
             print(p_org, matched)
+
+for season in range(2007, 2016):
+    pass#gen_gamebygame(season, False)

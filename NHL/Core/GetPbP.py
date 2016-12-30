@@ -96,7 +96,7 @@ TEAM_COLOR_DCT = {'ANA': ['black', 'orange'], 'L.A': ['black', 'white'],
                   'SWE': ['goldenrod', 'b']}
 TEAM_COLOR_DCT2 = {'ANA': ["#91764B", '#000000', '#EF5225'], 'ARI': ['#841F27', '#000000', '#EFE1C6'], 
                    'PHX': ['#841F27', '#000000', '#EFE1C6'], 'ATL': ['#4B82C3', '#CE7318'], 'BOS': ['#FFC422', '#000000'],
-                   'BUF': ['002E62', '#FDBB2F', '#AEB6B9'], 'CGY': ['#E03A3E', '#FFC758', '#000000'], 
+                   'BUF': ['#002E62', '#FDBB2F', '#AEB6B9'], 'CGY': ['#E03A3E', '#FFC758', '#000000'],
                    'CAR': ['#8E8E90', '#E03A3E', '#8E8E90'], 'CHI': ['#E3263A', '#000000'], 
                    'COL': ['#8B2942', '#01548A', '#000000', '#A9B0B8'], 
                    'CBJ': ['#00285C', '#E03A3E', '#A9B0B8'], 'DAL': ['#006A4E', '#000000', '#C0C0C0'], 
@@ -260,7 +260,7 @@ def get_gamesheet_folder(season):
 
     season: e.g. 2013 for 2013-14"""
 
-    return '/Users/muneebalam/Desktop/NHLPlaybyPlay/Archive/{0:d}{1:d}/'.format(season, season + 1)
+    return './NHLPlaybyPlay/Archive/{0:d}{1:d}/'.format(season, season + 1)
 
 
 def get_parsed_gamesheet_folder(season):
@@ -268,12 +268,12 @@ def get_parsed_gamesheet_folder(season):
 
     season: e.g. 2013 for 2013-14"""
 
-    return '/Users/muneebalam/Desktop/NHLPlaybyPlay/Parsed/{0:d}{1:d}/'.format(season, season + 1)
+    return './NHLPlaybyPlay/Parsed/{0:d}{1:d}/'.format(season, season + 1)
 
 def get_additional_data_folder():
     """Returns the folder where additional data files are stored"""
 
-    return '/Users/muneebalam/Desktop/NHLPlaybyPlay/Parsed/Misc files/'
+    return './NHLPlaybyPlay/Parsed/Misc files/'
 
 
 def get_pbp_filename(season, game):
@@ -606,7 +606,7 @@ def save_file(url, savefile):
         print('Did not finish reading {0:s}; re-run to grab it later'.format(url))
         return
 
-    writer = open(savefile, 'w')
+    writer = open(savefile, 'w', encoding='utf-8')
     writer.write(data)
     writer.close()
     time.sleep(1)
@@ -795,7 +795,7 @@ def parse_pbp(season, game, force_overwrite=False, espn=True, player_short_to_lo
                         y = int(events[i][11][events[i][11].index(';') + 1:-1])
                         events[i][11] = '({0:d};{1:d})'.format(x * -1, y * -1)
 
-            w = open(fname, 'w')
+            w = open(fname, 'w', encoding='utf-8')
             w.write('Game {0:d}: {1:s}@{2:s}\n{3:s}\nStart {4:s} End {5:s}'.format(game, roadname, homename, date,
                                                                                    starttime, endtime))
             w.write('\nAttendance {0:s}\n{1:s}'.format(attendance, venue))
@@ -1482,7 +1482,7 @@ def parse_toih(season, game, force_overwrite=False):
 
                 shift_data_startend[name].append([period, start, end])
 
-        w = open(parsed_fname, 'w')
+        w = open(parsed_fname, 'w', encoding='utf-8')
         w.write('TOIH {0:d} {1:d} {2:s}@{3:s}'.format(season, game, rname, hname))
         w.write('\nShift starts and ends')
         for p in player_order:
@@ -1592,7 +1592,7 @@ def parse_toiv(season, game, force_overwrite=False):
 
                 shift_data_startend[name].append([period, start, end])
 
-        w = open(parsed_fname, 'w')
+        w = open(parsed_fname, 'w', encoding='utf-8')
         w.write('TOIB {0:d} {1:d} {2:s}@{3:s}'.format(season, game, rname, hname))
         w.write('\nShift starts and ends')
         for p in player_order:
@@ -1684,7 +1684,7 @@ def save_toimatrix(season, game, force_overwrite=False):
 
             r.close()
 
-        w = open(get_parsed_toimatrix_filename(season, game), 'w')
+        w = open(get_parsed_toimatrix_filename(season, game), 'w', encoding='utf-8')
         w.write('Time(s),Score,Strength,Home,Road')
         current_score = scoretimes[0]
         for i in range(1, len(matrix)):
@@ -1801,10 +1801,10 @@ def teampages(season, new_games=False):
     toiwriters = {}
     for team in lognames:
         if new_games is None or not new_games or not os.path.isfile(lognames[team]):
-            writers[team] = open(lognames[team], 'w')
+            writers[team] = open(lognames[team], 'w', encoding='utf-8')
             writers[team].write('Game,Opp,Period,Strength,Time,Score,Event,Team,Zone,Actor,Recipient,Note,XY')
             writers[team].write(',{0:s} on ice,Opp on ice'.format(team))
-            toiwriters[team] = open(toilognames[team], 'w')
+            toiwriters[team] = open(toilognames[team], 'w', encoding='utf-8')
             toiwriters[team].write('Game,Opp,Time,Score,Strength')
             toiwriters[team].write(',{0:s} on ice,Opp on ice'.format(team))
         else:
